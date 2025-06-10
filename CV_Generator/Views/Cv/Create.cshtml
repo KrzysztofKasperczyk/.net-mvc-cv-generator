@@ -1,0 +1,23 @@
+﻿@model CvGenerator.Models.CurriculumVitae
+
+@{
+    ViewData["Title"] = "Create CV";
+}
+
+<h1>Create CV</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Personal.FullName"></label>
+        <input asp-for="Personal.FullName" class="form-control" />
+        <span asp-validation-for="Personal.FullName" class="text-danger"></span>
+    </div>
+    <!-- dodaj tutaj pozostałe pola modelu -->
+    <button type="submit" class="btn btn-primary">Next</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
