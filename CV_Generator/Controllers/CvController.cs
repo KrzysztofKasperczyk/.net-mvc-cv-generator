@@ -10,7 +10,6 @@ namespace CvGenerator.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            // Prepare an empty model for the view
             var model = new CurriculumVitae
             {
                 Personal = new PersonalInfo(),
@@ -27,13 +26,8 @@ namespace CvGenerator.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(CurriculumVitae model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            // For now, redirect to preview
-            return RedirectToAction("Preview", model);
+            // For preview purposes, bypass validation and directly render the Preview view
+            return View("Preview", model);
         }
 
         // GET: /Cv/Preview
