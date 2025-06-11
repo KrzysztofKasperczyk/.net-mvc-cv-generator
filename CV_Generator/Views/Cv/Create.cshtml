@@ -1,19 +1,111 @@
 ﻿@model CvGenerator.Models.CurriculumVitae
-
 @{
     ViewData["Title"] = "Create CV";
 }
-
-<h1>Create CV</h1>
-
+<h1>Create Your CV</h1>
 <form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Personal.FullName"></label>
-        <input asp-for="Personal.FullName" class="form-control" />
-        <span asp-validation-for="Personal.FullName" class="text-danger"></span>
+    <div class="card mb-4">
+        <div class="card-header">Personal Information</div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Personal.FullName"></label>
+                    <input asp-for="Personal.FullName" class="form-control" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Personal.Email"></label>
+                    <input asp-for="Personal.Email" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Personal.Phone"></label>
+                <input asp-for="Personal.Phone" class="form-control" />
+            </div>
+        </div>
     </div>
-    <!-- dodaj tutaj pozostałe pola modelu -->
-    <button type="submit" class="btn btn-primary">Next</button>
+
+    <div class="card mb-4">
+        <div class="card-header">Education</div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Education[0].Institution"></label>
+                    <input asp-for="Education[0].Institution" class="form-control" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Education[0].Degree"></label>
+                    <input asp-for="Education[0].Degree" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="Education[0].StartDate"></label>
+                    <input asp-for="Education[0].StartDate" type="date" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="Education[0].EndDate"></label>
+                    <input asp-for="Education[0].EndDate" type="date" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Education[0].Description"></label>
+                <textarea asp-for="Education[0].Description" class="form-control"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Work Experience</div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Experience[0].Company"></label>
+                    <input asp-for="Experience[0].Company" class="form-control" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Experience[0].Position"></label>
+                    <input asp-for="Experience[0].Position" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="Experience[0].StartDate"></label>
+                    <input asp-for="Experience[0].StartDate" type="date" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="Experience[0].EndDate"></label>
+                    <input asp-for="Experience[0].EndDate" type="date" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Experience[0].Responsibilities"></label>
+                <textarea asp-for="Experience[0].Responsibilities" class="form-control"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Skills</div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Skills[0].Name"></label>
+                    <input asp-for="Skills[0].Name" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="Skills[0].Level"></label>
+                    <select asp-for="Skills[0].Level" class="form-control">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                        <option>Expert</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="Skills[0].Rating"></label>
+                    <input asp-for="Skills[0].Rating" type="number" min="1" max="5" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Preview CV</button>
 </form>
 
 @section Scripts {
