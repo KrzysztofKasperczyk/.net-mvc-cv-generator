@@ -1,0 +1,38 @@
+﻿@model CvGenerator.Models.CurriculumVitae
+@{
+    ViewData["Title"] = "Preview CV";
+}
+<div class="card">
+    <div class="card-body">
+        <h1>@Model.Personal.FullName</h1>
+        <p><strong>Email:</strong> @Model.Personal.Email</p>
+        <p><strong>Phone:</strong> @Model.Personal.Phone</p>
+
+        <hr />
+        <h3>Education</h3>
+        <div>
+            <strong>@Model.Education[0].Degree</strong>, @Model.Education[0].Institution<br />
+            <small>@Model.Education[0].StartDate:yyyy - @(Model.Education[0].EndDate?.ToString("yyyy") ?? "Present")</small>
+            <p>@Model.Education[0].Description</p>
+        </div>
+
+        <hr />
+        <h3>Work Experience</h3>
+        <div>
+            <strong>@Model.Experience[0].Position</strong> at @Model.Experience[0].Company<br />
+            <small>@Model.Experience[0].StartDate:yyyy - @(Model.Experience[0].EndDate?.ToString("yyyy") ?? "Present")</small>
+            <p>@Model.Experience[0].Responsibilities</p>
+        </div>
+
+        <hr />
+        <h3>Skills</h3>
+        <ul>
+            <li>@Model.Skills[0].Name (@Model.Skills[0].Level)
+                @if (Model.Skills[0].Rating.HasValue)
+                {
+                        <span>- @Model.Skills[0].Rating/5</span>
+                }
+            </li>
+        </ul>
+    </div>
+</div>
