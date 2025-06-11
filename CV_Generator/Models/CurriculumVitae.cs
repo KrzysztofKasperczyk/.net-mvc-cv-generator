@@ -42,10 +42,15 @@ namespace CvGenerator.Models
         [Required]
         public string Degree { get; set; }
 
-        [Required]
-        public DateTime StartDate { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
+
+        // Indicates if the user is still studying here
+        [Display(Name = "I am currently studying here")]
+        public bool IsOngoing { get; set; }
 
         public string Description { get; set; }
     }
@@ -58,10 +63,15 @@ namespace CvGenerator.Models
         [Required]
         public string Position { get; set; }
 
-        [Required]
-        public DateTime StartDate { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? StartDate { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
+
+        // Indicates if the user is still working here
+        [Display(Name = "I am currently working here")]
+        public bool IsOngoing { get; set; }
 
         public string Responsibilities { get; set; }
     }
