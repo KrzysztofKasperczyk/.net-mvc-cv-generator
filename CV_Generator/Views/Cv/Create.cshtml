@@ -43,7 +43,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label asp-for="Education[0].Institution"></label>
-                    <input asp-for="Education[0].Institution" class="form-control" />
+                    <input asp-for="Education[0].Institution" id="institution-autocomplete" class="form-control" />
                 </div>
                 <div class="form-group col-md-4">
                     <label asp-for="Education[0].Degree"></label>
@@ -159,5 +159,20 @@
                   var parts = val.match(/.{1,3}/g) || [];
                   this.value = parts.join('-');
                 });
+      </script>
+      <script>
+        $(function() {
+          $("#institution-autocomplete").autocomplete({
+            source: function(req, res) {
+              $.getJSON(
+                '@Url.Action("SearchInstitutions", "Cv")',
+                { term: req.term },
+                res
+              );
+            },
+            minLength: 2,
+            delay: 200
+          });
+        });
       </script>
 }

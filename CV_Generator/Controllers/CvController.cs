@@ -15,6 +15,39 @@ namespace CvGenerator.Controllers
         {
             _env = env;
         }
+
+        [HttpGet]
+        public IActionResult SearchInstitutions(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
+                return Json(Array.Empty<string>());
+
+            // Ścieżka do pliku JSON z polskimi uczelniami
+            var path = Path.Combine(_env.WebRootPath, "data", "polishUniversities.json");
+            if (!System.IO.File.Exists(path))
+                return Json(Array.Empty<string>());
+
+            var json = System.IO.File.ReadAllText(path);
+            var list = JsonSerializer.Deserialize<List<University>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new List<University>();
+
+            var matches = list
+                .Select(u => u.Name)
+                .Where(n => n.Contains(term, StringComparison.OrdinalIgnoreCase))
+                .Distinct()
+                .Take(10)
+                .ToList();
+
+            return Json(matches);
+        }
+
+        private class University
+        {
+            public string Name { get; set; }
+        }
+
         private List<SelectListItem> LoadCountryCodes()
         {
             var path = Path.Combine(_env.WebRootPath, "data", "countryCodes.json");
