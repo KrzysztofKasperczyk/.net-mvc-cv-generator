@@ -20,16 +20,24 @@ namespace CvGenerator.Models
     public class PersonalInfo
     {
         [Required]
+        [StringLength(100, ErrorMessage = "Full Name must be at most 100 characters.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Full Name can only contain letters and spaces.")]
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
 
+        [Required]
         [EmailAddress]
+        [StringLength(100, ErrorMessage = "Email Address must be at most 100 characters.")]
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 
+        [Required]
+        [Display(Name = "Country Code")]
+        public string CountryCode { get; set; }
+
         [Phone]
         [Display(Name = "Phone Number")]
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
 
         // additional personal fields as needed
     }
