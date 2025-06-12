@@ -1,0 +1,84 @@
+
+  [
+    {
+      "Text": "US +1",
+      "Value": "+1"
+    },
+    {
+      "Text": "CA +1",
+      "Value": "+1"
+    },
+    {
+      "Text": "RU +7",
+      "Value": "+7"
+    },
+    {
+      "Text": "ZA +27",
+      "Value": "+27"
+    },
+    {
+      "Text": "NL +31",
+      "Value": "+31"
+    },
+    {
+      "Text": "BE +32",
+      "Value": "+32"
+    },
+    {
+      "Text": "FR +33",
+      "Value": "+33"
+    },
+    {
+      "Text": "ES +34",
+      "Value": "+34"
+    },
+    {
+      "Text": "IT +39",
+      "Value": "+39"
+    },
+    {
+      "Text": "AT +43",
+      "Value": "+43"
+    },
+    {
+      "Text": "GB +44",
+      "Value": "+44"
+    },
+    {
+      "Text": "PL +48",
+      "Value": "+48"
+    },
+    {
+      "Text": "DE +49",
+      "Value": "+49"
+    },
+    {
+      "Text": "MX +52",
+      "Value": "+52"
+    },
+    {
+      "Text": "BR +55",
+      "Value": "+55"
+    },
+    {
+      "Text": "AU +61",
+      "Value": "+61"
+    },
+    {
+      "Text": "NZ +64",
+      "Value": "+64"
+    },
+    {
+      "Text": "JP +81",
+      "Value": "+81"
+    },
+    {
+      "Text": "CN +86",
+      "Value": "+86"
+    },
+    {
+      "Text": "IN +91",
+      "Value": "+91"
+    }
+  ]
+
