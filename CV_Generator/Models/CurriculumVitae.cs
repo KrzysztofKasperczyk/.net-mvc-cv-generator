@@ -44,15 +44,19 @@ namespace CvGenerator.Models
 
     public class EducationItem
     {
-        [Required]
-        public string Institution { get; set; }
+        
+        [StringLength(100, ErrorMessage = "Institution must be at most 100 characters.")]
+        public string? Institution { get; set; }
 
-        [Required]
-        public string Degree { get; set; }
+        
+        [StringLength(30, ErrorMessage = "Degree must be at most 30 characters.")]
+        public string? Degree { get; set; }
 
+        
         [DataType(DataType.Date)]
         public DateTime? StartDate { get; set; }
 
+        
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
 
@@ -60,7 +64,8 @@ namespace CvGenerator.Models
         [Display(Name = "I am currently studying here")]
         public bool IsOngoing { get; set; }
 
-        public string Description { get; set; }
+        [StringLength(500, ErrorMessage = "Description must be at most 500 characters.")]
+        public string? Description { get; set; }
     }
 
     public class WorkExperience
