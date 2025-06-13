@@ -9,43 +9,102 @@
         <p><strong>Phone:</strong> @Model.Personal.CountryCode @Model.Personal.PhoneNumber</p>
 
         <hr />
-        <h3>Education</h3>
-        <div>
-            <strong>@Model.Education[0].Degree</strong>, @Model.Education[0].Institution<br />
-            <small>
-                @(Model.Education[0].StartDate?.ToString("MM-yyyy") ?? "")
-                -
-                @(Model.Education[0].IsOngoing
-                        ? "Present"
-                        : (Model.Education[0].EndDate?.ToString("MM-yyyy") ?? ""))
-            </small>
-            <p>@Model.Education[0].Description</p>
-        </div>
 
-        <hr />
+        @foreach (var item in Model.Education.Where(e => e.HasEssentialData))
+        {
+            <h3>Education</h3>
+            @foreach (var edu in Model.Education.Where(e => e.HasEssentialData))
+            {
+                        <div class="mb-4">
+                    <strong>@edu.Institution</strong>
+                    @if (!string.IsNullOrWhiteSpace(edu.Degree))
+                    {
+                            <span>– @edu.Degree</span>
+                    }
+
+                    @* Dates are shown only if filled *@
+                    @if (edu.StartDate.HasValue || edu.IsOngoing || edu.EndDate.HasValue)
+                    {
+                            <br />
+                            <small>
+                            @if (edu.StartDate.HasValue)
+                            {
+                                @edu.StartDate.Value.ToString("MM-yyyy")
+                            }
+                            @if (edu.IsOngoing)
+                            {
+                                        <span> – Present</span>
+                            }
+                            else if (edu.EndDate.HasValue)
+                            {
+                                        <span> – @edu.EndDate.Value.ToString("MM-yyyy")</span>
+                            }
+                            </small>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(edu.Description))
+                    {
+                            <p>@edu.Description</p>
+                    }
+                </div>
+                <hr />
+
+            }
+        }
+      
+     
+        
+
+        @if (Model.Experience?.Any(e => e.HasEssentialData) == true)
+        {
         <h3>Work Experience</h3>
-        <div>
-            <strong>@Model.Experience[0].Position</strong> at @Model.Experience[0].Company<br />
-            <small>
-                @(Model.Experience[0].StartDate?.ToString("MM-yyyy") ?? "")
-                -
-                @(Model.Experience[0].IsOngoing
-                        ? "Present"
-                        : (Model.Experience[0].EndDate?.ToString("MM-yyyy") ?? ""))
-            </small>
-            <p>@Model.Experience[0].Responsibilities</p>
-        </div>
+            @foreach (var exp in Model.Experience.Where(x => x.HasEssentialData))
+            {
+                <div class="mb-4">
+                    <strong>@exp.Position</strong> at <em>@exp.Company</em>
 
-        <hr />
+                    @* Show dates when filled *@
+                    @if (exp.StartDate.HasValue || exp.IsOngoing || exp.EndDate.HasValue)
+                    {
+                            <br />
+                            <small>
+                            @if (exp.StartDate.HasValue)
+                            {
+                                @exp.StartDate.Value.ToString("MM-yyyy")
+                            }
+                            @if (exp.IsOngoing)
+                            {
+                                        <span> – Present</span>
+                            }
+                            else if (exp.EndDate.HasValue)
+                            {
+                                        <span> – @exp.EndDate.Value.ToString("MM-yyyy")</span>
+                            }
+                            </small>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(exp.Responsibilities))
+                    {
+                            <p>@exp.Responsibilities</p>
+                    }
+                </div>
+                <hr />
+            }
+
+        }
+
+        @if (Model.Skills?.Any(e => e.HasEssentialData) == true)
+        {
         <h3>Skills</h3>
         <ul>
-            <li>
-                @Model.Skills[0].Name (@Model.Skills[0].Level)
-                @if (Model.Skills[0].Rating.HasValue)
+            @foreach (var skill in Model.Skills.Where(s => s.HasEssentialData))
                 {
-                        <span>- @Model.Skills[0].Rating/5</span>
+                    <li>
+                        @skill.Name (@skill.Level)
+                    </li>
                 }
-            </li>
         </ul>
+
+        }
     </div>
 </div>
