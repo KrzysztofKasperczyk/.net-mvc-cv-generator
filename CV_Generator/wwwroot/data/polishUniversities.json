@@ -1,12 +1,179 @@
 [
-  { "Name": "Uniwersytet Warszawski" },
-  { "Name": "Politechnika Warszawska" },
-  { "Name": "Uniwersytet Jagielloński w Krakowie" },
-  { "Name": "Politechnika Krakowska im. Tadeusza Kościuszki" },
-  { "Name": "Uniwersytet Wrocławski" },
-  { "Name": "Politechnika Wrocławska" },
-  { "Name": "Uniwersytet Gdański" },
-  { "Name": "Politechnika Gdańska" },
-  { "Name": "Uniwersytet Adama Mickiewicza w Poznaniu" },
-  { "Name": "Politechnika Poznańska" }
+  {
+    "Name": "Uniwersytet Warszawski"
+  },
+  {
+    "Name": "Uniwersytet Jagielloński"
+  },
+  {
+    "Name": "Uniwersytet Adama Mickiewicza w Poznaniu"
+  },
+  {
+    "Name": "Uniwersytet Wrocławski"
+  },
+  {
+    "Name": "Uniwersytet Gdański"
+  },
+  {
+    "Name": "Uniwersytet Łódzki"
+  },
+  {
+    "Name": "Uniwersytet Śląski w Katowicach"
+  },
+  {
+    "Name": "Uniwersytet Mikołaja Kopernika w Toruniu"
+  },
+  {
+    "Name": "Uniwersytet Marii Curie-Skłodowskiej w Lublinie"
+  },
+  {
+    "Name": "Uniwersytet Szczeciński"
+  },
+  {
+    "Name": "Uniwersytet Opolski"
+  },
+  {
+    "Name": "Uniwersytet w Białymstoku"
+  },
+  {
+    "Name": "Uniwersytet Zielonogórski"
+  },
+  {
+    "Name": "Uniwersytet Warmińsko-Mazurski w Olsztynie"
+  },
+  {
+    "Name": "Uniwersytet Rzeszowski"
+  },
+  {
+    "Name": "Politechnika Warszawska"
+  },
+  {
+    "Name": "Politechnika Wrocławska"
+  },
+  {
+    "Name": "Politechnika Gdańska"
+  },
+  {
+    "Name": "Politechnika Łódzka"
+  },
+  {
+    "Name": "Politechnika Poznańska"
+  },
+  {
+    "Name": "Politechnika Śląska"
+  },
+  {
+    "Name": "Politechnika Lubelska"
+  },
+  {
+    "Name": "Politechnika Krakowska"
+  },
+  {
+    "Name": "Akademia Górniczo-Hutnicza im. Stanisława Staszica w Krakowie"
+  },
+  {
+    "Name": "Politechnika Rzeszowska"
+  },
+  {
+    "Name": "Politechnika Białostocka"
+  },
+  {
+    "Name": "Politechnika Częstochowska"
+  },
+  {
+    "Name": "Politechnika Opolska"
+  },
+  {
+    "Name": "Politechnika Koszalińska"
+  },
+  {
+    "Name": "Politechnika Świętokrzyska w Kielcach"
+  },
+  {
+    "Name": "Szkoła Główna Gospodarstwa Wiejskiego w Warszawie"
+  },
+  {
+    "Name": "Szkoła Główna Handlowa w Warszawie"
+  },
+  {
+    "Name": "Uniwersytet Ekonomiczny w Krakowie"
+  },
+  {
+    "Name": "Uniwersytet Ekonomiczny we Wrocławiu"
+  },
+  {
+    "Name": "Uniwersytet Ekonomiczny w Poznaniu"
+  },
+  {
+    "Name": "Uniwersytet Ekonomiczny w Katowicach"
+  },
+  {
+    "Name": "Akademia Leona Koźmińskiego w Warszawie"
+  },
+  {
+    "Name": "Szkoła Wyższa Psychologii Społecznej (SWPS)"
+  },
+  {
+    "Name": "Collegium Civitas"
+  },
+  {
+    "Name": "Polsko-Japońska Akademia Technik Komputerowych"
+  },
+  {
+    "Name": "Akademia Sztuk Pięknych w Warszawie"
+  },
+  {
+    "Name": "Akademia Sztuk Pięknych w Krakowie"
+  },
+  {
+    "Name": "Akademia Sztuk Pięknych w Łodzi"
+  },
+  {
+    "Name": "Akademia Sztuk Pięknych w Gdańsku"
+  },
+  {
+    "Name": "Akademia Sztuk Pięknych we Wrocławiu"
+  },
+  {
+    "Name": "Akademia Sztuk Pięknych w Katowicach"
+  },
+  {
+    "Name": "Uniwersytet Muzyczny Fryderyka Chopina w Warszawie"
+  },
+  {
+    "Name": "Akademia Muzyczna im. Karola Szymanowskiego w Katowicach"
+  },
+  {
+    "Name": "Akademia Medyczna im. Marii Curie-Skłodowskiej w Lublinie"
+  },
+  {
+    "Name": "Warszawski Uniwersytet Medyczny"
+  },
+  {
+    "Name": "Gdański Uniwersytet Medyczny"
+  },
+  {
+    "Name": "Uniwersytet Medyczny im. Piastów Śląskich we Wrocławiu"
+  },
+  {
+    "Name": "Uniwersytet Medyczny w Łodzi"
+  },
+  {
+    "Name": "Poznański Uniwersytet Medyczny"
+  },
+  {
+    "Name": "Pomorski Uniwersytet Medyczny w Szczecinie"
+  },
+  {
+    "Name": "Wojskowa Akademia Techniczna im. Jarosława Dąbrowskiego"
+  },
+  {
+    "Name": "Akademia Marynarki Wojennej w Gdyni"
+  },
+  {
+    "Name": "Akademia Wojsk Lądowych im. gen. Tadeusza Kościuszki we Wrocławiu"
+  },
+  {
+    "Name": "Akademia Finansów i Biznesu Vistula w Warszawie"
+  }
 ]
