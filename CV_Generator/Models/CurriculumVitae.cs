@@ -66,15 +66,23 @@ namespace CvGenerator.Models
 
         [StringLength(500, ErrorMessage = "Description must be at most 500 characters.")]
         public string? Description { get; set; }
+
+        /// <summary>
+        /// Main fields, that need to be filled so the whole thing can show up in summary.
+        /// </summary>
+        public bool HasEssentialData =>
+            !string.IsNullOrWhiteSpace(Institution)
+         || !string.IsNullOrWhiteSpace(Degree);
+         
     }
 
     public class WorkExperience
     {
-        [Required]
-        public string Company { get; set; }
+        [StringLength(50, ErrorMessage = "Company name must be at most 50 characters.")]
+        public string? Company { get; set; }
 
-        [Required]
-        public string Position { get; set; }
+        [StringLength(50, ErrorMessage = "Position name must be at most 50 characters.")]
+        public string? Position { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? StartDate { get; set; }
@@ -86,17 +94,32 @@ namespace CvGenerator.Models
         [Display(Name = "I am currently working here")]
         public bool IsOngoing { get; set; }
 
-        public string Responsibilities { get; set; }
+        [StringLength(500, ErrorMessage = "Responsibilities must be at most 50 characters.")]
+        public string? Responsibilities { get; set; }
+
+
+        /// <summary>
+        /// Main fields, that need to be filled so the whole thing can show up in summary.
+        /// </summary>
+        public bool HasEssentialData =>
+            !string.IsNullOrWhiteSpace(Company)
+         || !string.IsNullOrWhiteSpace(Position);
     }
 
     public class Skill
     {
-        [Required]
-        public string Name { get; set; }
+        public int? Id { get; set; }
 
-        [Required]
-        public string Level { get; set; }      // e.g. "Beginner", "Intermediate", "Advanced"
+        
+        public string? Name { get; set; }
 
-        public int? Rating { get; set; }       // optional rating 1–5
+        
+        [Range(1, 100, ErrorMessage = "Level must be between 1 and 100.")]
+        [Display(Name = "Skill Level (1–100)")]
+        public int? Level { get; set; } = 1;
+
+        public bool HasEssentialData =>
+            !string.IsNullOrWhiteSpace(Name);
+         
     }
 }

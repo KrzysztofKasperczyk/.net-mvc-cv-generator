@@ -116,16 +116,11 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label asp-for="Skills[0].Level"></label>
-                    <select asp-for="Skills[0].Level" class="form-control">
-                        <option>Beginner</option>
-                        <option>Intermediate</option>
-                        <option>Advanced</option>
-                        <option>Expert</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-3">
-                    <label asp-for="Skills[0].Rating"></label>
-                    <input asp-for="Skills[0].Rating" type="number" min="1" max="5" class="form-control" />
+                    <input asp-for="Skills[0].Level"
+                        type="number"
+                        class="form-control"
+                        min="1" max="100" />
+                   <span asp-validation-for="Skills[0].Level" class="text-danger"></span>
                 </div>
             </div>
         </div>
