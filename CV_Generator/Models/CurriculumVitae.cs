@@ -118,6 +118,9 @@ namespace CvGenerator.Models
         [Display(Name = "Skill Level (1–100)")]
         public int? Level { get; set; } = 1;
 
+        [StringLength(200, ErrorMessage = "Description must be at most 200 characters.")]
+        public string? Description { get; set; }
+
         public bool HasEssentialData =>
             !string.IsNullOrWhiteSpace(Name);
          
