@@ -1,210 +1,173 @@
 ﻿@model CvGenerator.Models.CurriculumVitae
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+
 @{
     ViewData["Title"] = "Create CV";
 }
 
 <h1>Create Your CV</h1>
 <form asp-action="Create" method="post">
-    @* validation summary *@
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    @* --- Personal Information --- *@
+    <!-- Personal Information -->
     <div class="card mb-4">
-        <div class="card-header">Personal Information</div>
-        <div class="card-body">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label asp-for="Personal.FullName"></label>
-                    <input asp-for="Personal.FullName" class="form-control" maxlength="100" />
-                    <span asp-validation-for="Personal.FullName" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-4">
-                    <label asp-for="Personal.Email"></label>
-                    <input asp-for="Personal.Email" class="form-control" maxlength="100" />
-                    <span asp-validation-for="Personal.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="Personal.CountryCode"></label>
-                    <select asp-for="Personal.CountryCode" class="form-control" asp-items="ViewBag.CountryCodes"></select>
-                    <span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="Personal.PhoneNumber"></label>
-                    <input asp-for="Personal.PhoneNumber" id="Personal_PhoneNumber" class="form-control" maxlength="11" />
-                    <span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
-                </div>
-            </div>
+      <div class="card-header">Personal Information</div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label asp-for="Personal.FullName"></label>
+            <input asp-for="Personal.FullName" class="form-control" maxlength="100" />
+            <span asp-validation-for="Personal.FullName" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-4">
+            <label asp-for="Personal.Email"></label>
+            <input asp-for="Personal.Email" class="form-control" maxlength="100" />
+            <span asp-validation-for="Personal.Email" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-2">
+            <label asp-for="Personal.CountryCode"></label>
+            <select asp-for="Personal.CountryCode" class="form-control" asp-items="ViewBag.CountryCodes"></select>
+            <span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-2">
+            <label asp-for="Personal.PhoneNumber"></label>
+            <input asp-for="Personal.PhoneNumber" id="Personal_PhoneNumber" class="form-control" maxlength="11" />
+            <span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
+          </div>
         </div>
+      </div>
     </div>
 
-    @* --- Education --- *@
+    <!-- Education -->
     <div class="card mb-4">
-        <div class="card-header">Education</div>
-        <div class="card-body">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label asp-for="Education[0].Institution"></label>
-                    <input asp-for="Education[0].Institution" id="institution-autocomplete" class="form-control" />
-                    <span asp-validation-for="Education[0].Institution" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-4">
-                    <label asp-for="Education[0].Degree"></label>
-                    <input asp-for="Education[0].Degree" class="form-control" />
-                    <span asp-validation-for="Education[0].Degree" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="Education[0].StartDate"></label>
-                    <input asp-for="Education[0].StartDate" type="date" class="form-control" />
-                    <span asp-validation-for="Education[0].StartDate" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="Education[0].EndDate"></label>
-                    <input asp-for="Education[0].EndDate" type="date" class="form-control" />
-                    <span asp-validation-for="Education[0].EndDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group form-check">
-                <input asp-for="Education[0].IsOngoing" class="form-check-input" />
-                <label asp-for="Education[0].IsOngoing" class="form-check-label"></label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Education[0].Description"></label>
-                <textarea asp-for="Education[0].Description" class="form-control"></textarea>
-                <span asp-validation-for="Education[0].Description" class="text-danger"></span>
-            </div>
+      <div class="card-header">Education</div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label asp-for="Education[0].Institution"></label>
+            <input asp-for="Education[0].Institution" id="institution-autocomplete" class="form-control" />
+            <span asp-validation-for="Education[0].Institution" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-4">
+            <label asp-for="Education[0].Degree"></label>
+            <input asp-for="Education[0].Degree" class="form-control" />
+            <span asp-validation-for="Education[0].Degree" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-2">
+            <label asp-for="Education[0].StartDate"></label>
+            <input asp-for="Education[0].StartDate" type="date" class="form-control" />
+            <span asp-validation-for="Education[0].StartDate" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-2">
+            <label asp-for="Education[0].EndDate"></label>
+            <input asp-for="Education[0].EndDate" type="date" class="form-control" />
+            <span asp-validation-for="Education[0].EndDate" class="text-danger"></span>
+          </div>
         </div>
+        <div class="form-group form-check">
+          <input asp-for="Education[0].IsOngoing" class="form-check-input" />
+          <label asp-for="Education[0].IsOngoing" class="form-check-label"></label>
+        </div>
+        <div class="form-group">
+          <label asp-for="Education[0].Description"></label>
+          <textarea asp-for="Education[0].Description" class="form-control"></textarea>
+          <span asp-validation-for="Education[0].Description" class="text-danger"></span>
+        </div>
+      </div>
     </div>
 
-    @* --- Work Experience --- *@
+    <!-- Work Experience -->
     <div class="card mb-4">
-        <div class="card-header">Work Experience</div>
-        <div class="card-body">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label asp-for="Experience[0].Company"></label>
-                    <input asp-for="Experience[0].Company" class="form-control" />
-                    <span asp-validation-for="Experience[0].Company" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-4">
-                    <label asp-for="Experience[0].Position"></label>
-                    <input asp-for="Experience[0].Position" class="form-control" />
-                    <span asp-validation-for="Experience[0].Position" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="Experience[0].StartDate"></label>
-                    <input asp-for="Experience[0].StartDate" type="date" class="form-control" />
-                    <span asp-validation-for="Experience[0].StartDate" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="Experience[0].EndDate"></label>
-                    <input asp-for="Experience[0].EndDate" type="date" class="form-control" />
-                    <span asp-validation-for="Experience[0].EndDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group form-check">
-                <input asp-for="Experience[0].IsOngoing" class="form-check-input" />
-                <label asp-for="Experience[0].IsOngoing" class="form-check-label"></label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Experience[0].Responsibilities"></label>
-                <textarea asp-for="Experience[0].Responsibilities" class="form-control"></textarea>
-                <span asp-validation-for="Experience[0].Responsibilities" class="text-danger"></span>
-            </div>
+      <div class="card-header">Work Experience</div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label asp-for="Experience[0].Company"></label>
+            <input asp-for="Experience[0].Company" class="form-control" />
+            <span asp-validation-for="Experience[0].Company" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-4">
+            <label asp-for="Experience[0].Position"></label>
+            <input asp-for="Experience[0].Position" class="form-control" />
+            <span asp-validation-for="Experience[0].Position" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-2">
+            <label asp-for="Experience[0].StartDate"></label>
+            <input asp-for="Experience[0].StartDate" type="date" class="form-control" />
+            <span asp-validation-for="Experience[0].StartDate" class="text-danger"></span>
+          </div>
+          <div class="form-group col-md-2">
+            <label asp-for="Experience[0].EndDate"></label>
+            <input asp-for="Experience[0].EndDate" type="date" class="form-control" />
+            <span asp-validation-for="Experience[0].EndDate" class="text-danger"></span>
+          </div>
         </div>
+        <div class="form-group form-check">
+          <input asp-for="Experience[0].IsOngoing" class="form-check-input" />
+          <label asp-for="Experience[0].IsOngoing" class="form-check-label"></label>
+        </div>
+        <div class="form-group">
+          <label asp-for="Experience[0].Responsibilities"></label>
+          <textarea asp-for="Experience[0].Responsibilities" class="form-control"></textarea>
+          <span asp-validation-for="Experience[0].Responsibilities" class="text-danger"></span>
+        </div>
+      </div>
     </div>
 
-    @* --- Skills (dynamic list with Description) --- *@
+    <!-- Skills (dynamic list) -->
     <div class="card mb-4">
-        <div class="card-header">Skills</div>
-        <div class="card-body">
-            <div id="skills-container">
-                @for (var i = 0; i < Model.Skills.Count; i++)
+      <div class="card-header">Skills</div>
+      <div class="card-body">
+        <div id="skills-container">
+                @for (int i = 0; i < Model.Skills.Count; i++)
                 {
-                        <div class="skill-item form-row mb-2">
-                            <div class="form-group col-md-4">
-                                <label asp-for="Skills[@i].Name"></label>
-                                <input asp-for="Skills[@i].Name" class="form-control" />
-                                <span asp-validation-for="Skills[@i].Name" class="text-danger"></span>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label asp-for="Skills[@i].Level"></label>
-                                <input asp-for="Skills[@i].Level"
-                                       type="number" min="1" max="100"
-                                       class="form-control" />
-                                <span asp-validation-for="Skills[@i].Level" class="text-danger"></span>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label asp-for="Skills[@i].Description"></label>
-                                <textarea asp-for="Skills[@i].Description" class="form-control"></textarea>
-                                <span asp-validation-for="Skills[@i].Description" class="text-danger"></span>
-                            </div>
-                            <div class="form-group col-md-2 align-self-end">
-                                <button type="button" class="remove-skill btn btn-sm btn-danger">Remove</button>
-                            </div>
-                        </div>
+                    var vd = new ViewDataDictionary(ViewData);
+                    vd.TemplateInfo.HtmlFieldPrefix = $"Skills[{i}]";
+                    Html.RenderPartial("_SkillItem", Model.Skills[i], vd);
                 }
-            </div>
-            <button type="button" id="add-skill" class="btn btn-sm btn-outline-primary">Add Skill</button>
         </div>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary">Preview CV</button>
 </form>
 
-@* hidden template for new skill rows *@
+@* Hidden template for new skill rows *@
 <div id="skill-template" style="display:none;">
-    <div class="skill-item form-row mb-2">
-        <div class="form-group col-md-4">
-            <label>Name</label>
-            <input name="Skills[__index__].Name" class="form-control" />
-        </div>
-        <div class="form-group col-md-2">
-            <label>Level (1–100)</label>
-            <input name="Skills[__index__].Level" type="number" min="1" max="100" class="form-control" />
-        </div>
-        <div class="form-group col-md-4">
-            <label>Description</label>
-            <textarea name="Skills[__index__].Description" class="form-control"></textarea>
-        </div>
-        <div class="form-group col-md-2 align-self-end">
-            <button type="button" class="remove-skill btn btn-sm btn-danger">Remove</button>
-        </div>
-    </div>
+  @{
+      var vd2 = new ViewDataDictionary(ViewData);
+      vd2.TemplateInfo.HtmlFieldPrefix = "Skills[__index__]";
+      Html.RenderPartial("_SkillItem", new CvGenerator.Models.Skill(), vd2);
+  }
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+  <script>
+    $(function() {
+      var skillIndex = @Model.Skills.Count;
+      var template = $('#skill-template').html();
 
-        <script>
-        $(function() {
-            // dynamic skills add/remove
-            var skillIndex = @Model.Skills.Count;
+      $('#add-skill').click(function() {
+        var row = template.replace(/__index__/g, skillIndex++);
+        $('#skills-container').append(row);
+      });
 
-            $('#add-skill').click(function() {
-                var row = $('#skill-template').html().replace(/__index__/g, skillIndex);
-                $('#skills-container').append(row);
-                skillIndex++;
-            });
+      $(document).on('click', '.remove-skill', function() {
+        $(this).closest('.skill-item').remove();
+      });
 
-            $(document).on('click', '.remove-skill', function() {
-                $(this).closest('.skill-item').remove();
-            });
+      $('#Personal_PhoneNumber').on('input', function() {
+        var val = this.value.replace(/\D/g, '').substring(0,9);
+        var parts = val.match(/.{1,3}/g) || [];
+        this.value = parts.join('-');
+      });
 
-            // phone mask
-            $('#Personal_PhoneNumber').on('input', function() {
-                var val = this.value.replace(/\D/g, '').substring(0,9);
-                var parts = val.match(/.{1,3}/g) || [];
-                this.value = parts.join('-');
-            });
-
-            // autocomplete for institution
-            $('#institution-autocomplete').autocomplete({
-                source: '@Url.Action("SearchInstitutions", "Cv")',
-                minLength: 2,
-                delay: 200
-            });
-        });
-        </script>
+      $('#institution-autocomplete').autocomplete({
+        source: '@Url.Action("SearchInstitutions","Cv")',
+        minLength: 2,
+        delay: 200
+      });
+    });
+  </script>
 }
