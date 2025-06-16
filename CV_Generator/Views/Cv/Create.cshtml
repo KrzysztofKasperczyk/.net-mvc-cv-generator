@@ -3,6 +3,9 @@
 
 @{
     ViewData["Title"] = "Create CV";
+    // prepare ViewData for the “entry” Skill partial
+    var vdEntry = new ViewDataDictionary(ViewData);
+    vdEntry.TemplateInfo.HtmlFieldPrefix = "EntrySkill";
 }
 
 <h1>Create Your CV</h1>
@@ -114,20 +117,26 @@
       </div>
     </div>
 
-    <!-- Skills (dynamic list) -->
-    <div class="card mb-4">
-      <div class="card-header">Skills</div>
-      <div class="card-body">
-        <div id="skills-container">
-                @for (int i = 0; i < Model.Skills.Count; i++)
-                {
-                    var vd = new ViewDataDictionary(ViewData);
-                    vd.TemplateInfo.HtmlFieldPrefix = $"Skills[{i}]";
-                    Html.RenderPartial("_SkillItem", Model.Skills[i], vd);
-                }
-        </div>
-      </div>
+    <!-- Skills Preview Tiles -->
+  <div class="card mb-4">
+    <div class="card-header">Added Skills</div>
+    <div class="card-body">
+      <div id="added-skills-container" class="d-flex flex-wrap"></div>
     </div>
+  </div>
+
+  <!-- Skill Entry -->
+  <div class="card mb-4">
+    <div class="card-header">New Skill</div>
+    <div class="card-body">
+            @* Render the same _SkillItem partial as the entry form *@
+            @Html.Partial("_SkillItem", new CvGenerator.Models.Skill(), vdEntry)
+      <button type="button" id="add-skill" class="btn btn-sm btn-outline-primary mt-2">Add Skill</button>
+    </div>
+  </div>
+
+  <!-- Hidden container for real model inputs -->
+  <div id="skills-inputs"></div>
 
     <button type="submit" class="btn btn-primary">Preview CV</button>
 </form>
@@ -142,32 +151,59 @@
 </div>
 
 @section Scripts {
-  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-  <script>
-    $(function() {
-      var skillIndex = @Model.Skills.Count;
-      var template = $('#skill-template').html();
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
-      $('#add-skill').click(function() {
-        var row = template.replace(/__index__/g, skillIndex++);
-        $('#skills-container').append(row);
-      });
+      <script>
+      $(function() {
+        var skillIndex = 0;
 
-      $(document).on('click', '.remove-skill', function() {
-        $(this).closest('.skill-item').remove();
-      });
+        $('#add-skill').click(function() {
+          // read values from entry partial
+          var name = $('[name="EntrySkill.Name"]').val();
+          var level = $('[name="EntrySkill.Level"]').val();
+          var desc  = $('[name="EntrySkill.Description"]').val();
 
-      $('#Personal_PhoneNumber').on('input', function() {
-        var val = this.value.replace(/\D/g, '').substring(0,9);
-        var parts = val.match(/.{1,3}/g) || [];
-        this.value = parts.join('-');
-      });
+          if (!name) {
+            alert('Please enter skill name.');
+            return;
+          }
 
-      $('#institution-autocomplete').autocomplete({
-        source: '@Url.Action("SearchInstitutions","Cv")',
-        minLength: 2,
-        delay: 200
+          // render tile
+              var tile = $('<div class="badge badge-light text-dark m-1 p-2"></div>')
+            .text(name + ' (Level ' + level + ')')
+            .append(desc ? $('<div><small>'+ desc +'</small></div>') : null);
+          $('#added-skills-container').append(tile);
+
+          // create hidden inputs for binding
+          $('<input>').attr({ type:'hidden', name:'Skills['+skillIndex+'].Name', value:name })
+            .appendTo('#skills-inputs');
+          $('<input>').attr({ type:'hidden', name:'Skills['+skillIndex+'].Level', value:level })
+            .appendTo('#skills-inputs');
+          $('<input>').attr({ type:'hidden', name:'Skills['+skillIndex+'].Description', value:desc })
+            .appendTo('#skills-inputs');
+
+          skillIndex++;
+
+          // clear the entry partial fields
+          $('[name="EntrySkill.Name"]').val('');
+          $('[name="EntrySkill.Level"]').val('1');
+          $('[name="EntrySkill.Description"]').val('');
+        });
+
+        // phone mask & autocomplete same as before…
+        $('#Personal_PhoneNumber').on('input', function(){
+          var v = this.value.replace(/\D/g,'').substring(0,9);
+          var parts = v.match(/.{1,3}/g)||[];
+          this.value = parts.join('-');
+        });
+
+        $('#institution-autocomplete').autocomplete({
+          source: '@Url.Action("SearchInstitutions", "Cv")',
+          minLength: 2,
+          delay: 200
+        });
       });
-    });
-  </script>
+      </script>
 }
