@@ -6,6 +6,8 @@
     // prepare ViewData for the “entry” Skill partial
     var vdEntry = new ViewDataDictionary(ViewData);
     vdEntry.TemplateInfo.HtmlFieldPrefix = "EntrySkill";
+    var vdEntryWork = new ViewDataDictionary(ViewData);
+    vdEntryWork.TemplateInfo.HtmlFieldPrefix = "EntryWork";
 }
 
 <h1>Create Your CV</h1>
@@ -79,43 +81,24 @@
       </div>
     </div>
 
-    <!-- Work Experience -->
-    <div class="card mb-4">
-      <div class="card-header">Work Experience</div>
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label asp-for="Experience[0].Company"></label>
-            <input asp-for="Experience[0].Company" class="form-control" />
-            <span asp-validation-for="Experience[0].Company" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-4">
-            <label asp-for="Experience[0].Position"></label>
-            <input asp-for="Experience[0].Position" class="form-control" />
-            <span asp-validation-for="Experience[0].Position" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-2">
-            <label asp-for="Experience[0].StartDate"></label>
-            <input asp-for="Experience[0].StartDate" type="date" class="form-control" />
-            <span asp-validation-for="Experience[0].StartDate" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-2">
-            <label asp-for="Experience[0].EndDate"></label>
-            <input asp-for="Experience[0].EndDate" type="date" class="form-control" />
-            <span asp-validation-for="Experience[0].EndDate" class="text-danger"></span>
-          </div>
-        </div>
-        <div class="form-group form-check">
-          <input asp-for="Experience[0].IsOngoing" class="form-check-input" />
-          <label asp-for="Experience[0].IsOngoing" class="form-check-label"></label>
-        </div>
-        <div class="form-group">
-          <label asp-for="Experience[0].Responsibilities"></label>
-          <textarea asp-for="Experience[0].Responsibilities" class="form-control"></textarea>
-          <span asp-validation-for="Experience[0].Responsibilities" class="text-danger"></span>
-        </div>
-      </div>
+    <!-- Work Experience Preview -->
+  <div class="card mb-4">
+    <div class="card-header">Added Experience</div>
+    <div class="card-body">
+      <div id="added-work-container" class="d-flex flex-column"></div>
     </div>
+  </div>
+
+  <!-- Work Experience Entry -->
+  <div class="card mb-4">
+    <div class="card-header">New Experience</div>
+    <div class="card-body">
+            @Html.Partial("_WorkItem", new CvGenerator.Models.WorkExperience(), vdEntryWork)
+    </div>
+  </div>
+
+  <!-- Hidden inputs for model binding -->
+  <div id="work-inputs"></div>
 
     <!-- Skills Preview Tiles -->
   <div class="card mb-4">
@@ -203,6 +186,62 @@
           source: '@Url.Action("SearchInstitutions", "Cv")',
           minLength: 2,
           delay: 200
+        });
+      });
+      </script>
+
+
+      <script>
+      $(function() {
+        var workIndex = 0;
+
+        $('#add-work').click(function() {
+          var prefix = 'EntryWork';
+          var company = $('[name="'+prefix+'.Company"]').val();
+          var position = $('[name="'+prefix+'.Position"]').val();
+          var start = $('[name="'+prefix+'.StartDate"]').val();
+          var end = $('[name="'+prefix+'.EndDate"]').val();
+          var ongoing = $('[name="'+prefix+'.IsOngoing"]').is(':checked');
+          var resp = $('[name="'+prefix+'.Responsibilities"]').val();
+
+          if (!company || !position) {
+            alert('Please enter Company and Position.');
+            return;
+          }
+
+          // append a preview tile
+          var tile = $('<div class="mb-2 p-2 border rounded"></div>')
+            .append('<strong>'+company+'</strong> – '+position+'<br>')
+            .append('<small>'+
+                      (start?start:'')+
+                      (ongoing ? ' – Present' : (end?(' – '+end):''))+
+                    '</small>');
+          $('#added-work-container').append(tile);
+
+          // create hidden fields
+          var base = 'Experience['+workIndex+']';
+          $('<input>').attr({type:'hidden', name: base + '.Company', value: company})
+            .appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden', name: base + '.Position', value: position})
+            .appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden', name: base + '.StartDate', value: start})
+            .appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden', name: base + '.EndDate', value: end})
+            .appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden', name: base + '.IsOngoing', value: ongoing})
+            .appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden', name: base + '.Responsibilities', value: resp})
+            .appendTo('#work-inputs');
+
+          workIndex++;
+
+          // clear entry form
+          $('[name="'+prefix+'.Company"]').val('');
+          $('[name="'+prefix+'.Position"]').val('');
+          $('[name="'+prefix+'.StartDate"]').val('');
+          $('[name="'+prefix+'.EndDate"]').val('');
+          $('[name="'+prefix+'.IsOngoing"]').prop('checked', false);
+          $('[name="'+prefix+'.Responsibilities"]').val('');
         });
       });
       </script>
