@@ -191,58 +191,79 @@
       </script>
 
 
-      <script>
-      $(function() {
-        var workIndex = 0;
+          <script>
+    $(function() {
+      var workIndex = 0;
 
-        $('#add-work').click(function() {
-          var prefix = 'EntryWork';
-          var company = $('[name="'+prefix+'.Company"]').val();
-          var position = $('[name="'+prefix+'.Position"]').val();
-          var start = $('[name="'+prefix+'.StartDate"]').val();
-          var end = $('[name="'+prefix+'.EndDate"]').val();
-          var ongoing = $('[name="'+prefix+'.IsOngoing"]').is(':checked');
-          var resp = $('[name="'+prefix+'.Responsibilities"]').val();
+      $('#add-work').click(function() {
+        var prefix = 'EntryWork';
+        var company = $('[name="'+prefix+'.Company"]').val();
+        var position = $('[name="'+prefix+'.Position"]').val();
+        var start = $('[name="'+prefix+'.StartDate"]').val();
+        var end = $('[name="'+prefix+'.EndDate"]').val();
+        var ongoing = $('[name="'+prefix+'.IsOngoing"]').is(':checked');
+        var resp = $('[name="'+prefix+'.Responsibilities"]').val();
 
-          if (!company || !position) {
-            alert('Please enter Company and Position.');
-            return;
-          }
+        if (!company || !position) {
+          alert('Podaj firmę i stanowisko');
+          return;
+        }
 
-          // append a preview tile
-          var tile = $('<div class="mb-2 p-2 border rounded"></div>')
-            .append('<strong>'+company+'</strong> – '+position+'<br>')
-            .append('<small>'+
-                      (start?start:'')+
-                      (ongoing ? ' – Present' : (end?(' – '+end):''))+
-                    '</small>');
-          $('#added-work-container').append(tile);
+        var dates = start 
+          ? start 
+          : '';
+        if (ongoing)       dates += ' – Present';
+        else if (end)      dates += ' – ' + end;
 
-          // create hidden fields
-          var base = 'Experience['+workIndex+']';
-          $('<input>').attr({type:'hidden', name: base + '.Company', value: company})
-            .appendTo('#work-inputs');
-          $('<input>').attr({type:'hidden', name: base + '.Position', value: position})
-            .appendTo('#work-inputs');
-          $('<input>').attr({type:'hidden', name: base + '.StartDate', value: start})
-            .appendTo('#work-inputs');
-          $('<input>').attr({type:'hidden', name: base + '.EndDate', value: end})
-            .appendTo('#work-inputs');
-          $('<input>').attr({type:'hidden', name: base + '.IsOngoing', value: ongoing})
-            .appendTo('#work-inputs');
-          $('<input>').attr({type:'hidden', name: base + '.Responsibilities', value: resp})
-            .appendTo('#work-inputs');
+        // **1. kafelek z data-index i przyciskiem Usuń**
+        var idx = workIndex;
+        var tile = $(
+          '<div class="work-tile mb-2 p-2 border rounded" data-index="'+idx+'"></div>'
+        )
+        .append('<strong>'+company+'</strong> – '+position+'<br>')
+        .append('<small>'+dates+'</small>')
+        .append(
+          '<button type="button" class="remove-experience btn btn-sm btn-danger ml-2">Usuń</button>'
+        );
+        $('#added-work-container').append(tile);
 
-          workIndex++;
+        // **2. hidden inputs dla model bindingu**
+        var base = 'Experience['+idx+']';
+        $('<input>').attr({type:'hidden', name: base + '.Company', value: company})
+          .appendTo('#work-inputs');
+        $('<input>').attr({type:'hidden', name: base + '.Position', value: position})
+          .appendTo('#work-inputs');
+        $('<input>').attr({type:'hidden', name: base + '.StartDate', value: start})
+          .appendTo('#work-inputs');
+        $('<input>').attr({type:'hidden', name: base + '.EndDate', value: end})
+          .appendTo('#work-inputs');
+        $('<input>').attr({type:'hidden', name: base + '.IsOngoing', value: ongoing})
+          .appendTo('#work-inputs');
+        $('<input>').attr({type:'hidden', name: base + '.Responsibilities', value: resp})
+          .appendTo('#work-inputs');
 
-          // clear entry form
-          $('[name="'+prefix+'.Company"]').val('');
-          $('[name="'+prefix+'.Position"]').val('');
-          $('[name="'+prefix+'.StartDate"]').val('');
-          $('[name="'+prefix+'.EndDate"]').val('');
-          $('[name="'+prefix+'.IsOngoing"]').prop('checked', false);
-          $('[name="'+prefix+'.Responsibilities"]').val('');
-        });
+        workIndex++;
+
+        // **3. wyczyść formularz wpisu**
+        $('[name="'+prefix+'.Company"]').val('');
+        $('[name="'+prefix+'.Position"]').val('');
+        $('[name="'+prefix+'.StartDate"]').val('');
+        $('[name="'+prefix+'.EndDate"]').val('');
+        $('[name="'+prefix+'.IsOngoing"]').prop('checked', false);
+        $('[name="'+prefix+'.Responsibilities"]').val('');
       });
-      </script>
+
+      // **4. handler usuwania kafelka i ukrytych inputów**
+      $(document).on('click', '.remove-experience', function() {
+        var tile = $(this).closest('.work-tile');
+        var idx  = tile.data('index');
+        tile.remove();
+        $("#work-inputs input").filter(function() {
+          return this.name.startsWith('Experience['+idx+']');
+        }).remove();
+      });
+
+      // … reszta skryptów (phone mask, autocomplete) …
+    });
+    </script>
 }
