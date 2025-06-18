@@ -114,12 +114,9 @@
     <div class="card-body">
             @* Render the same _SkillItem partial as the entry form *@
             @Html.Partial("_SkillItem", new CvGenerator.Models.Skill(), vdEntry)
-      <button type="button" id="add-skill" class="btn btn-sm btn-outline-primary mt-2">Add Skill</button>
     </div>
   </div>
 
-  <!-- Hidden container for real model inputs -->
-  <div id="skills-inputs"></div>
 
     <button type="submit" class="btn btn-primary">Preview CV</button>
 </form>
@@ -139,8 +136,55 @@
     }
         <script>
         $(function() {
-            // initialize counter for Experience entries
+            // Counters for dynamic lists
+            var skillIndex = 0;
             var workIndex = 0;
+
+            // ADD SKILL
+            $('#add-skill').on('click', function(){
+              // read entry fields (prefix EntrySkill)
+              var name  = $('[name="EntrySkill.Name"]').val();
+              var level = $('[name="EntrySkill.Level"]').val();
+              var desc  = $('[name="EntrySkill.Description"]').val();
+
+              if (!name) {
+                alert('Please enter skill name.');
+                return;
+              }
+
+              // render badge tile
+              var $tile = $(
+                '<div class="badge badge-light text-dark m-1 p-2" data-index="'+skillIndex+'">'+
+                  name + ' (Lvl ' + level + ')' +
+                  (desc ? '<div><small>'+ desc +'</small></div>' : '') +
+                '</div>'
+              );
+              $('#added-skills-container').append($tile);
+
+              // hidden inputs for model binding
+              $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Name', value:name})
+                          .appendTo('#skills-inputs');
+              $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Level', value:level})
+                          .appendTo('#skills-inputs');
+              $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Description', value:desc})
+                          .appendTo('#skills-inputs');
+
+              skillIndex++;
+
+              // clear entry form
+              $('[name="EntrySkill.Name"]').val('');
+              $('[name="EntrySkill.Level"]').val('1');
+              $('[name="EntrySkill.Description"]').val('');
+            });
+
+            // CLICK ON BADGE TO REMOVE SKILL
+            $(document).on('click', '#added-skills-container .badge', function(){
+              var idx = $(this).data('index');
+              $(this).remove();
+              $('#skills-inputs input').filter(function(){
+                return this.name.indexOf('Skills['+idx+']') === 0;
+              }).remove();
+            });
 
             // handler for adding new Experience
             $('#add-work').on('click', function() {
@@ -213,6 +257,7 @@
                 }).remove();
             });
 
+
             // phone input mask
             $('#Personal_PhoneNumber').on('input', function() {
                 var val = this.value.replace(/\D/g, '').substring(0,9);
@@ -228,6 +273,7 @@
             });
         });
         </script>
+        
 }
 
 
@@ -250,6 +296,16 @@
   border-color: #f5c6cb;
 }
 
+/* make skill badges transition nicely */
+#added-skills-container .badge {
+  transition: background-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+/* on hover, light-red background and darker-red text */
+#added-skills-container .badge:hover {
+  background-color: #f8d7da;
+  color: #721c24;
+}
 
 
 </style>
