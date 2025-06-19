@@ -49,7 +49,7 @@ namespace CvGenerator.Models
         public string? Institution { get; set; }
 
         
-        [StringLength(30, ErrorMessage = "Degree must be at most 30 characters.")]
+        [StringLength(80, ErrorMessage = "Degree must be at most 80 characters.")]
         public string? Degree { get; set; }
 
         
