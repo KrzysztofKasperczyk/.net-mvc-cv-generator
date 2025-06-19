@@ -274,6 +274,46 @@
                 minLength: 2,
                 delay: 200
             });
+
+            // get today in YYYY-MM-DD format
+            var today = new Date().toISOString().split('T')[0];
+
+            // only restrict future dates on all StartDate inputs
+            $('input[type="date"][id$="StartDate"]')
+              .attr('max', today)
+              .on('change', function(){
+              // if user manually enters a future date, reset to today
+              if (this.value > today) {
+                 this.value = today;
+              }
+            });
+
+			// restrict EndDate to not be before StartDate
+                //  ensure EndDate is never before its corresponding StartDate
+            $('input[type="date"]').on('change', function(){
+              var $input = $(this);
+              var name   = $input.attr('name');
+
+              // if a StartDate changed, update the min on its matching EndDate
+              if (name.endsWith('.StartDate')) {
+                var endName = name.replace('.StartDate', '.EndDate');
+                var $end    = $('input[name="' + endName + '"]');
+                $end.attr('min', $input.val());
+                if ($end.val() && $end.val() < $input.val()) {
+                  $end.val($input.val());
+                }
+              }
+
+              // if an EndDate changed, prevent it being before its matching StartDate
+              if (name.endsWith('.EndDate')) {
+                var startName = name.replace('.EndDate', '.StartDate');
+                var startVal  = $('input[name="' + startName + '"]').val();
+                if (startVal && $input.val() < startVal) {
+                  $input.val(startVal);
+                }
+              }
+            });
+
         });
         </script>
         
