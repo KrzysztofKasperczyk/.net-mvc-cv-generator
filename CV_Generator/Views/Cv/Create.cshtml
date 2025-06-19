@@ -2,278 +2,330 @@
 @using Microsoft.AspNetCore.Mvc.ViewFeatures
 
 @{
-    ViewData["Title"] = "Create CV";
-    // prepare ViewData for the “entry” Skill partial
-    var vdEntry = new ViewDataDictionary(ViewData);
-    vdEntry.TemplateInfo.HtmlFieldPrefix = "EntrySkill";
-    var vdEntryWork = new ViewDataDictionary(ViewData);
-    vdEntryWork.TemplateInfo.HtmlFieldPrefix = "EntryWork";
+	ViewData["Title"] = "Create CV";
+	// prepare ViewData for the “entry” Skill partial
+	var vdEntry = new ViewDataDictionary(ViewData);
+	vdEntry.TemplateInfo.HtmlFieldPrefix = "EntrySkill";
+	var vdEntryWork = new ViewDataDictionary(ViewData);
+	vdEntryWork.TemplateInfo.HtmlFieldPrefix = "EntryWork";
 }
 
 <h1>Create Your CV</h1>
 <form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+	<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <!-- Personal Information -->
-    <div class="card mb-4">
-      <div class="card-header">Personal Information</div>
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label asp-for="Personal.FullName"></label>
-            <input asp-for="Personal.FullName" class="form-control" maxlength="100" />
-            <span asp-validation-for="Personal.FullName" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-4">
-            <label asp-for="Personal.Email"></label>
-            <input asp-for="Personal.Email" class="form-control" maxlength="100" />
-            <span asp-validation-for="Personal.Email" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-2">
-            <label asp-for="Personal.CountryCode"></label>
-            <select asp-for="Personal.CountryCode" class="form-control" asp-items="ViewBag.CountryCodes"></select>
-            <span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-2">
-            <label asp-for="Personal.PhoneNumber"></label>
-            <input asp-for="Personal.PhoneNumber" id="Personal_PhoneNumber" class="form-control" maxlength="11" />
-            <span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
-          </div>
-        </div>
-      </div>
-    </div>
+	<!-- Personal Information -->
+	<div class="card mb-4">
+	  <div class="card-header">Personal Information</div>
+	  <div class="card-body">
+		<div class="form-row">
+		  <div class="form-group col-md-4">
+			<label asp-for="Personal.FullName"></label>
+			<input asp-for="Personal.FullName" class="form-control" maxlength="100" />
+			<span asp-validation-for="Personal.FullName" class="text-danger"></span>
+		  </div>
+		  <div class="form-group col-md-4">
+			<label asp-for="Personal.Email"></label>
+			<input asp-for="Personal.Email" class="form-control" maxlength="100" />
+			<span asp-validation-for="Personal.Email" class="text-danger"></span>
+		  </div>
+		  <div class="form-group col-md-2">
+			<label asp-for="Personal.CountryCode"></label>
+			<select asp-for="Personal.CountryCode" class="form-control" asp-items="ViewBag.CountryCodes"></select>
+			<span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
+		  </div>
+		  <div class="form-group col-md-2">
+			<label asp-for="Personal.PhoneNumber"></label>
+			<input asp-for="Personal.PhoneNumber" id="Personal_PhoneNumber" class="form-control" maxlength="11" />
+			<span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
+		  </div>
+		</div>
+	  </div>
+	</div>
 
-    <!-- Education -->
-    <div class="card mb-4">
-      <div class="card-header">Education</div>
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label asp-for="Education[0].Institution"></label>
-            <input asp-for="Education[0].Institution" id="institution-autocomplete" class="form-control" />
-            <span asp-validation-for="Education[0].Institution" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-4">
-            <label asp-for="Education[0].Degree"></label>
-            <input asp-for="Education[0].Degree" class="form-control" />
-            <span asp-validation-for="Education[0].Degree" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-2">
-            <label asp-for="Education[0].StartDate"></label>
-            <input asp-for="Education[0].StartDate" type="date" class="form-control" />
-            <span asp-validation-for="Education[0].StartDate" class="text-danger"></span>
-          </div>
-          <div class="form-group col-md-2">
-            <label asp-for="Education[0].EndDate"></label>
-            <input asp-for="Education[0].EndDate" type="date" class="form-control" />
-            <span asp-validation-for="Education[0].EndDate" class="text-danger"></span>
-          </div>
-        </div>
-        <div class="form-group form-check">
-          <input asp-for="Education[0].IsOngoing" class="form-check-input" />
-          <label asp-for="Education[0].IsOngoing" class="form-check-label"></label>
-        </div>
-        <div class="form-group">
-          <label asp-for="Education[0].Description"></label>
-          <textarea asp-for="Education[0].Description" class="form-control"></textarea>
-          <span asp-validation-for="Education[0].Description" class="text-danger"></span>
-        </div>
-      </div>
-    </div>
+	<!-- Education -->
+	<div class="card mb-4">
+	  <div class="card-header">Education</div>
+	  <div class="card-body">
+		<div class="form-row">
+		  <div class="form-group col-md-4">
+			<label asp-for="Education[0].Institution"></label>
+			<input asp-for="Education[0].Institution" id="institution-autocomplete" class="form-control" />
+			<span asp-validation-for="Education[0].Institution" class="text-danger"></span>
+		  </div>
+		  <div class="form-group col-md-4">
+			<label asp-for="Education[0].Degree"></label>
+			<input asp-for="Education[0].Degree" id="degree-autocomplete" class="form-control" />
+			<span asp-validation-for="Education[0].Degree" class="text-danger"></span>
+		  </div>
+		  <div class="form-group col-md-2">
+			<label asp-for="Education[0].StartDate"></label>
+			<input asp-for="Education[0].StartDate" type="date" class="form-control" />
+			<span asp-validation-for="Education[0].StartDate" class="text-danger"></span>
+		  </div>
+		  <div class="form-group col-md-2">
+			<label asp-for="Education[0].EndDate"></label>
+			<input asp-for="Education[0].EndDate" type="date" class="form-control" />
+			<span asp-validation-for="Education[0].EndDate" class="text-danger"></span>
+		  </div>
+		</div>
+		<div class="form-group form-check">
+		  <input asp-for="Education[0].IsOngoing" class="form-check-input" />
+		  <label asp-for="Education[0].IsOngoing" class="form-check-label"></label>
+		</div>
+		<div class="form-group">
+		  <label asp-for="Education[0].Description"></label>
+		  <textarea asp-for="Education[0].Description" class="form-control"></textarea>
+		  <span asp-validation-for="Education[0].Description" class="text-danger"></span>
+		</div>
+	  </div>
+	</div>
 
-    <!-- Work Experience Preview -->
+	<!-- Work Experience Preview -->
   <div class="card mb-4">
-    <div class="card-header">Added Experience</div>
-    <div class="card-body">
-      <div id="added-work-container" class="d-flex flex-column"></div>
-    </div>
+	<div class="card-header">Added Experience</div>
+	<div class="card-body">
+	  <div id="added-work-container" class="d-flex flex-column"></div>
+	</div>
   </div>
 
   <!-- Work Experience Entry -->
   <div class="card mb-4">
-    <div class="card-header">New Experience</div>
-    <div class="card-body">
-            @Html.Partial("_WorkItem", new CvGenerator.Models.WorkExperience(), vdEntryWork)
-    </div>
+	<div class="card-header">New Experience</div>
+	<div class="card-body">
+			@Html.Partial("_WorkItem", new CvGenerator.Models.WorkExperience(), vdEntryWork)
+	</div>
   </div>
 
   <!-- Hidden inputs for model binding -->
   <div id="work-inputs"></div>
 
-    <!-- Skills Preview Tiles -->
+	<!-- Skills Preview Tiles -->
   <div class="card mb-4">
-    <div class="card-header">Added Skills</div>
-    <div class="card-body">
-      <div id="added-skills-container" class="d-flex flex-wrap"></div>
-    </div>
+	<div class="card-header">Added Skills</div>
+	<div class="card-body">
+	  <div id="added-skills-container" class="d-flex flex-wrap"></div>
+	</div>
   </div>
 
   <!-- Skill Entry -->
   <div class="card mb-4">
-    <div class="card-header">New Skill</div>
-    <div class="card-body">
-            @* Render the same _SkillItem partial as the entry form *@
-            @Html.Partial("_SkillItem", new CvGenerator.Models.Skill(), vdEntry)
-    </div>
+	<div class="card-header">New Skill</div>
+	<div class="card-body">
+			@* Render the same _SkillItem partial as the entry form *@
+			@Html.Partial("_SkillItem", new CvGenerator.Models.Skill(), vdEntry)
+	</div>
   </div>
 
+  <!-- Hidden inputs for model binding -->
+  <div id="skills-inputs"></div>
 
-    <button type="submit" class="btn btn-primary">Preview CV</button>
+
+	<button type="submit" class="btn btn-primary">Preview CV</button>
 </form>
 
 @* Hidden template for new skill rows *@
 <div id="skill-template" style="display:none;">
-  @{
-      var vd2 = new ViewDataDictionary(ViewData);
-      vd2.TemplateInfo.HtmlFieldPrefix = "Skills[__index__]";
-      Html.RenderPartial("_SkillItem", new CvGenerator.Models.Skill(), vd2);
-  }
+	@{
+		var vd2 = new ViewDataDictionary(ViewData);
+		vd2.TemplateInfo.HtmlFieldPrefix = "Skills[__index__]";
+		Html.RenderPartial("_SkillItem", new CvGenerator.Models.Skill(), vd2);
+	}
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-        <script>
-        $(function() {
-            // Counters for dynamic lists
-            var skillIndex = 0;
-            var workIndex = 0;
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+			<script>
+			$(function() {
+				// Counters for dynamic lists
+				var skillIndex = 0;
+				var workIndex = 0;
 
-            // ADD SKILL
-            $('#add-skill').on('click', function(){
-              // read entry fields (prefix EntrySkill)
-              var name  = $('[name="EntrySkill.Name"]').val();
-              var level = $('[name="EntrySkill.Level"]').val();
-              var desc  = $('[name="EntrySkill.Description"]').val();
+				// ADD SKILL
+				$('#add-skill').on('click', function(){
+				  // read entry fields (prefix EntrySkill)
+				  var name  = $('[name="EntrySkill.Name"]').val();
+				  var level = $('[name="EntrySkill.Level"]').val();
+				  var desc  = $('[name="EntrySkill.Description"]').val();
 
-              if (!name) {
-                alert('Please enter skill name.');
-                return;
-              }
+				  if (!name) {
+					alert('Please enter skill name.');
+					return;
+				  }
 
-              // render badge tile
-              var $tile = $(
-                '<div class="badge badge-light text-dark m-1 p-2" data-index="'+skillIndex+'">'+
-                  name + ' (Lvl ' + level + ')' +
-                  (desc ? '<div><small>'+ desc +'</small></div>' : '') +
-                '</div>'
-              );
-              $('#added-skills-container').append($tile);
+				  // render badge tile
+				  var $tile = $(
+					'<div class="badge badge-light text-dark m-1 p-2" data-index="'+skillIndex+'">'+
+					  name + ' (Lvl ' + level + ')' +
+					  (desc ? '<div><small>'+ desc +'</small></div>' : '') +
+					'</div>'
+				  );
+				  $('#added-skills-container').append($tile);
 
-              // hidden inputs for model binding
-              $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Name', value:name})
-                          .appendTo('#skills-inputs');
-              $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Level', value:level})
-                          .appendTo('#skills-inputs');
-              $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Description', value:desc})
-                          .appendTo('#skills-inputs');
+				  // hidden inputs for model binding
+				  $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Name', value:name})
+							  .appendTo('#skills-inputs');
+				  $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Level', value:level})
+							  .appendTo('#skills-inputs');
+				  $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Description', value:desc})
+							  .appendTo('#skills-inputs');
 
-              skillIndex++;
+				  skillIndex++;
 
-              // clear entry form
-              $('[name="EntrySkill.Name"]').val('');
-              $('[name="EntrySkill.Level"]').val('1');
-              $('[name="EntrySkill.Description"]').val('');
-            });
+				  // clear entry form
+				  $('[name="EntrySkill.Name"]').val('');
+				  $('[name="EntrySkill.Level"]').val('1');
+				  $('[name="EntrySkill.Description"]').val('');
+				});
 
-            // CLICK ON BADGE TO REMOVE SKILL
-            $(document).on('click', '#added-skills-container .badge', function(){
-              var idx = $(this).data('index');
-              $(this).remove();
-              $('#skills-inputs input').filter(function(){
-                return this.name.indexOf('Skills['+idx+']') === 0;
-              }).remove();
-            });
+				// CLICK ON BADGE TO REMOVE SKILL
+				$(document).on('click', '#added-skills-container .badge', function(){
+				  var idx = $(this).data('index');
+				  $(this).remove();
+				  $('#skills-inputs input').filter(function(){
+					return this.name.indexOf('Skills['+idx+']') === 0;
+				  }).remove();
+				});
 
-            // handler for adding new Experience
-            $('#add-work').on('click', function() {
-                var prefix = 'EntryWork';
-                var company    = $('[name="' + prefix + '.Company"]').val();
-                var position   = $('[name="' + prefix + '.Position"]').val();
-                var startDate  = $('[name="' + prefix + '.StartDate"]').val();
-                var endDate    = $('[name="' + prefix + '.EndDate"]').val();
-                var isOngoing  = $('[name="' + prefix + '.IsOngoing"]').is(':checked');
-                var resp       = $('[name="' + prefix + '.Responsibilities"]').val();
+				// handler for adding new Experience
+					$('#add-work').on('click', function() {
+	  var prefix    = 'EntryWork';
+	  var company   = $('[name="'+prefix+'.Company"]').val();
+	  var position  = $('[name="'+prefix+'.Position"]').val();
+	  var startDate = $('[name="'+prefix+'.StartDate"]').val();
+	  var endDate   = $('[name="'+prefix+'.EndDate"]').val();
+	  var isOng     = $('[name="'+prefix+'.IsOngoing"]').is(':checked');
+	  var resp      = $('[name="'+prefix+'.Responsibilities"]').val();
 
-                if (!company || !position) {
-                    alert('Please enter both Company and Position.');
-                    return;
-                }
+	  if (!company || !position) {
+		alert('Please enter both Company and Position.');
+		return;
+	  }
 
-                // format dates
-                var dates = startDate ? startDate : '';
-                if (isOngoing) {
-                    dates += ' – Present';
-                } else if (endDate) {
-                    dates += ' – ' + endDate;
-                }
+	  // compute a local index
+	  var idx = workIndex;
 
-                // create a clickable tile
-                var $tile = $(
-                    '<div class="work-tile mb-2" data-index="' + workIndex + '">' +
-                      '<div class="work-content">' +
-                        '<strong>' + company + '</strong> – ' + position + '<br>' +
-                        '<small>' + dates + '</small>' +
-                      '</div>' +
-                    '</div>'
-                );
-                $('#added-work-container').append($tile);
+	  // format dates
+	  var dates = startDate||'';
+	  if (isOng)      dates += ' – Present';
+	  else if (endDate) dates += ' – ' + endDate;
 
-                // create hidden inputs for model binding
-                var base = 'Experience[' + workIndex + ']';
-                $('<input>').attr({ type:'hidden', name: base + '.Company', value: company })
-                            .appendTo('#work-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.Position', value: position })
-                            .appendTo('#work-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.StartDate', value: startDate })
-                            .appendTo('#work-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.EndDate', value: endDate })
-                            .appendTo('#work-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.IsOngoing', value: isOngoing })
-                            .appendTo('#work-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.Responsibilities', value: resp })
-                            .appendTo('#work-inputs');
+	  // build the HTML, now using idx
+	  var tileHtml =
+		'<div class="work-tile mb-2" data-index="' + idx + '">' +
+		  '<div class="work-content">' +
+			'<strong>' + company + '</strong> – ' + position + '<br>' +
+			'<small>' + dates + '</small>' +
+			// append responsibilities only if non-empty
+			(resp
+			  ? '<br><small class="responsibilities">Resp: ' 
+				+ resp.replace(/</g,'&lt;').replace(/>/g,'&gt;') 
+				+ '</small>'
+			  : ''
+			) +
+		  '</div>' +
+		'</div>';
 
-                workIndex++;
+	  // append to container
+	  $('#added-work-container').append(tileHtml);
 
-                // clear entry form
-                $('[name="' + prefix + '.Company"]').val('');
-                $('[name="' + prefix + '.Position"]').val('');
-                $('[name="' + prefix + '.StartDate"]').val('');
-                $('[name="' + prefix + '.EndDate"]').val('');
-                $('[name="' + prefix + '.IsOngoing"]').prop('checked', false);
-                $('[name="' + prefix + '.Responsibilities"]').val('');
-            });
+	  // create your hidden inputs exactly as before…
+	  var base = 'Experience['+idx+']';
+	  $('<input>').attr({type:'hidden', name: base+'.Company',      value:company}).appendTo('#work-inputs');
+	  $('<input>').attr({type:'hidden', name: base+'.Position',     value:position}).appendTo('#work-inputs');
+	  $('<input>').attr({type:'hidden', name: base+'.StartDate',    value:startDate}).appendTo('#work-inputs');
+	  $('<input>').attr({type:'hidden', name: base+'.EndDate',      value:endDate}).appendTo('#work-inputs');
+	  $('<input>').attr({type:'hidden', name: base+'.IsOngoing',    value:isOng}).appendTo('#work-inputs');
+	  $('<input>').attr({type:'hidden', name: base+'.Responsibilities', value:resp}).appendTo('#work-inputs');
 
-            // delegate click on tile to remove it and its hidden inputs
-            $(document).on('click', '.work-tile', function() {
-                var $tile = $(this);
-                var idx   = $tile.data('index');
-                $tile.remove();
-                // remove corresponding hidden inputs
-                $('#work-inputs input').filter(function() {
-                    return this.name.startsWith('Experience[' + idx + ']');
-                }).remove();
-            });
+	  // bump your counter
+	  workIndex++;
+
+					// clear entry form
+					$('[name="' + prefix + '.Company"]').val('');
+					$('[name="' + prefix + '.Position"]').val('');
+					$('[name="' + prefix + '.StartDate"]').val('');
+					$('[name="' + prefix + '.EndDate"]').val('');
+					$('[name="' + prefix + '.IsOngoing"]').prop('checked', false);
+					$('[name="' + prefix + '.Responsibilities"]').val('');
+				});
+
+				// delegate click on tile to remove it and its hidden inputs
+				$(document).on('click', '.work-tile', function() {
+					var $tile = $(this);
+					var idx   = $tile.data('index');
+					$tile.remove();
+					// remove corresponding hidden inputs
+					$('#work-inputs input').filter(function() {
+						return this.name.startsWith('Experience[' + idx + ']');
+					}).remove();
+				});
 
 
-            // phone input mask
-            $('#Personal_PhoneNumber').on('input', function() {
-                var val = this.value.replace(/\D/g, '').substring(0,9);
-                var parts = val.match(/.{1,3}/g) || [];
-                this.value = parts.join('-');
-            });
+				// phone input mask
+				$('#Personal_PhoneNumber').on('input', function() {
+					var val = this.value.replace(/\D/g, '').substring(0,9);
+					var parts = val.match(/.{1,3}/g) || [];
+					this.value = parts.join('-');
+				});
 
-            // institution autocomplete
-            $('#institution-autocomplete').autocomplete({
-                source: '@Url.Action("SearchInstitutions", "Cv")',
-                minLength: 2,
-                delay: 200
-            });
-        });
-        </script>
-        
+				// institution autocomplete
+				$('#institution-autocomplete').autocomplete({
+					source: '@Url.Action("SearchInstitutions", "Cv")',
+					minLength: 2,
+					delay: 200
+				});
+
+			    $("#degree-autocomplete").autocomplete({
+					source: "@Url.Action("SearchDegrees", "Cv")",
+					minLength: 2,
+					delay: 200
+				});
+
+				// get today in YYYY-MM-DD format
+				var today = new Date().toISOString().split('T')[0];
+
+				// only restrict future dates on all StartDate inputs
+				$('input[type="date"][id$="StartDate"]')
+				  .attr('max', today)
+				  .on('change', function(){
+				  // if user manually enters a future date, reset to today
+				  if (this.value > today) {
+					 this.value = today;
+				  }
+				});
+
+				// restrict EndDate to not be before StartDate
+					//  ensure EndDate is never before its corresponding StartDate
+				$('input[type="date"]').on('change', function(){
+				  var $input = $(this);
+				  var name   = $input.attr('name');
+
+				  // if a StartDate changed, update the min on its matching EndDate
+				  if (name.endsWith('.StartDate')) {
+					var endName = name.replace('.StartDate', '.EndDate');
+					var $end    = $('input[name="' + endName + '"]');
+					$end.attr('min', $input.val());
+					if ($end.val() && $end.val() < $input.val()) {
+					  $end.val($input.val());
+					}
+				  }
+
+				  // if an EndDate changed, prevent it being before its matching StartDate
+				  if (name.endsWith('.EndDate')) {
+					var startName = name.replace('.EndDate', '.StartDate');
+					var startVal  = $('input[name="' + startName + '"]').val();
+					if (startVal && $input.val() < startVal) {
+					  $input.val(startVal);
+					}
+				  }
+				});
+
+			});
+			</script>
+
 }
 
 

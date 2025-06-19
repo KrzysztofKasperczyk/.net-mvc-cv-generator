@@ -43,6 +43,29 @@ namespace CvGenerator.Controllers
             return Json(matches);
         }
 
+        [HttpGet]
+        public IActionResult SearchDegrees(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
+                return Json(Array.Empty<string>());
+
+            var path = Path.Combine(_env.WebRootPath, "data", "degrees.json");
+            if (!System.IO.File.Exists(path))
+                return Json(Array.Empty<string>());
+
+            var json = System.IO.File.ReadAllText(path);
+            var allDegrees = JsonSerializer.Deserialize<List<string>>(json)
+                             ?? new List<string>();
+
+            var matches = allDegrees
+                .Where(d => d.Contains(term, StringComparison.OrdinalIgnoreCase))
+                .Distinct()
+                .Take(10)
+                .ToList();
+
+            return Json(matches);
+        }
+
         private class University
         {
             public string Name { get; set; }
