@@ -193,3 +193,18 @@
     font-weight: 400;
     color: #4a5568;
 }
+
+.form-control-file {
+    display: block; /* force block so input sits under its label */
+}
+
+.cv-photo {
+    display: block; /* ensure block-level and left-aligned */
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    margin-top: 0.5rem; /* small gap under the file input */
+}
