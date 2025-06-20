@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CvGenerator.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+
 
 namespace CvGenerator.Controllers
 {
@@ -98,10 +101,34 @@ namespace CvGenerator.Controllers
         // POST: /Cv/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CurriculumVitae model)
+        public async Task<IActionResult> Create(CurriculumVitae model, IFormFile? Photo)
         {
             ViewBag.CountryCodes = LoadCountryCodes();
-            // For preview purposes, bypass validation and directly render the Preview view
+
+            if (Photo != null && Photo.Length > 0)
+            {
+                // 1) Prepare target folder
+                var uploads = Path.Combine(_env.WebRootPath, "uploads", "photos");
+                Directory.CreateDirectory(uploads);
+
+                // 2) Unique filename
+                var ext = Path.GetExtension(Photo.FileName);
+                var fileName = $"{Guid.NewGuid()}{ext}";
+                var filePath = Path.Combine(uploads, fileName);
+
+                // 3) Load, crop & resize to 150×200
+                using var img = Image.Load(Photo.OpenReadStream());
+                img.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Size = new Size(150, 200),
+                    Mode = ResizeMode.Crop
+                }));
+                await img.SaveAsync(filePath);
+
+                // 4) Store relative path for the preview
+                model.Personal.PhotoPath = $"/uploads/photos/{fileName}";
+            }
+
             return View("Preview", model);
         }
 

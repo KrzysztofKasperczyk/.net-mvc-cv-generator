@@ -39,6 +39,7 @@ namespace CvGenerator.Models
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
+        public string? PhotoPath { get; set; }
         // additional personal fields as needed
     }
 
