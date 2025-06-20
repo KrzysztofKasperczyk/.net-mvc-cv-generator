@@ -17,45 +17,67 @@
 	<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
  <!-- Personal Information -->
-  <div class="card mb-4 personal-item">
-	<div class="card-header">Personal Information</div>
-	<div class="card-body">
-	  <div class="form-row">
-		<div class="form-group col-md-4">
-	      <label asp-for="Personal.FullName"></label>
-		  <input asp-for="Personal.FullName" class="form-control" maxlength="100" />
+ <div class="card mb-4 personal-item">
+  <div class="card-header">Personal Information</div>
+  <div class="card-body">
+	<div class="row">
+
+	  <!-- LEFT COLUMN: text fields, half‐width inputs -->
+	  <div class="col-12 col-md-6">
+		<div class="form-group">
+		  <label asp-for="Personal.FullName"></label>
+		  <input asp-for="Personal.FullName"
+				 class="form-control w-50"
+				 maxlength="100" />
 		  <span asp-validation-for="Personal.FullName" class="text-danger"></span>
 		</div>
-		  <div class="form-group col-md-4">
-			<label asp-for="Personal.Email"></label>
-			<input asp-for="Personal.Email" class="form-control" maxlength="100" />
-			<span asp-validation-for="Personal.Email" class="text-danger"></span>
-		  </div>
-		  <div class="form-group col-md-2">
-			<label asp-for="Personal.CountryCode"></label>
-			<select asp-for="Personal.CountryCode" class="form-control" asp-items="ViewBag.CountryCodes"></select>
-			<span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
-		  </div>
-		  <div class="form-group col-md-2">
-			<label asp-for="Personal.PhoneNumber"></label>
-			<input asp-for="Personal.PhoneNumber" id="Personal_PhoneNumber" class="form-control" maxlength="11" />
-			<span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
-		  </div>
-		  <div class="form-group col-md-2">
-		  <label for="Photo">Photo</label>
+		<div class="form-group">
+		  <label asp-for="Personal.Email"></label>
+		  <input asp-for="Personal.Email"
+				 class="form-control w-50"
+				 maxlength="100" />
+		  <span asp-validation-for="Personal.Email" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+		  <label asp-for="Personal.CountryCode"></label>
+		  <select asp-for="Personal.CountryCode"
+				  class="form-control w-auto"
+				  asp-items="ViewBag.CountryCodes"></select>
+		  <span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+		  <label asp-for="Personal.PhoneNumber"></label>
+		  <input asp-for="Personal.PhoneNumber"
+				 id="Personal_PhoneNumber"
+				 class="form-control w-auto"
+				 maxlength="11" />
+		  <span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
+		</div>
+	  </div>
+
+	  <!-- RIGHT COLUMN: photo picker + preview, left‐aligned -->
+	  <div class="col-12 col-md-6">
+		<div class="form-group">
+		  <label for="Photo" class="d-block">Photo</label>
 		  <input type="file"
 				 name="Photo"
 				 id="Photo"
 				 accept="image/*"
-				 class="form-control-file" />
-				 <img id="photo-preview"
-				   src=""
-				   alt="Preview"
-				   style="display:none; margin-top:0.5rem; max-width:100%; height:auto; border:1px solid #ccc; border-radius:4px;" />
-		  </div>
-	   </div>
+				 class="form-control-file mt-1" />
+		</div>
+		<img id="photo-preview"
+			 src=""
+			 alt="Photo preview"
+			 class="cv-photo mt-2"
+			 style="display:none;" />
+	  </div>
+
 	</div>
-   </div>
+  </div>
+</div>
+
+
+
 
 	<!-- Education Preview Tiles -->
   <div class="card mb-4">
