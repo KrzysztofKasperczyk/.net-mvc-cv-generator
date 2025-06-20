@@ -104,8 +104,7 @@
 /* ——— Preview Tiles (Added Items) ——— */
 /* Common tile base */
 .education-tile,
-.work-tile,
-#added-skills-container .badge {
+.work-tile {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -149,10 +148,48 @@
 
     /* Tile description/responsibilities */
     .education-tile .education-desc,
-    .work-tile .responsibilities,
-    #added-skills-container .badge small {
+    .work-tile .responsibilities {
         font-size: 0.9rem;
         color: #2d3748;
         font-style: italic;
         margin-top: 0.25rem;
     }
+
+/* —— Skill tiles: wrap and style —— */
+#added-skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+/* make each badge behave like a tile */
+#added-skills-container .badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 0 1 auto; /* shrink and grow */
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 2px 8px rgba(60, 72, 88, 0.06);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    cursor: pointer;
+}
+
+
+/* the main text (name + level) */
+#added-skills-container .badge {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    line-height: 1.2;
+}
+
+/* description inside <small> */
+#added-skills-container .badge small {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #4a5568;
+}

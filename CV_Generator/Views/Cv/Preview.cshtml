@@ -6,6 +6,14 @@
 <div class="card">
   <div class="card-body">
         @* --- Personal Information --- *@
+    @if (!string.IsNullOrEmpty(Model.Personal.PhotoPath))
+    {
+        <div class="mb-3">
+        <img src="@Model.Personal.PhotoPath"
+                alt="Profile photo"
+                class="cv-photo rounded" />
+        </div>
+    }
     <h1>@Model.Personal.FullName</h1>
     <p><strong>Email:</strong> @Model.Personal.Email</p>
     <p><strong>Phone:</strong> @Model.Personal.CountryCode @Model.Personal.PhoneNumber</p>
