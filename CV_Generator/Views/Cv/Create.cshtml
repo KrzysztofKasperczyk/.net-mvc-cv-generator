@@ -73,6 +73,18 @@
 	  </div>
 
 	</div>
+
+		<!-- Summary -->
+		<div class="form-group">
+		  <label asp-for="Personal.Summary"></label>
+		  <textarea asp-for="Personal.Summary"
+					class="form-control"
+					maxlength="500"
+					rows="4"
+					placeholder="Tell us something about yourself…"></textarea>
+		  <span asp-validation-for="Personal.Summary" class="text-danger"></span>
+		</div>
+
   </div>
 </div>
 

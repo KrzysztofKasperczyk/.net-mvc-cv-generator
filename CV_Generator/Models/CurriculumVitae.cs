@@ -40,7 +40,10 @@ namespace CvGenerator.Models
         public string PhoneNumber { get; set; }
 
         public string? PhotoPath { get; set; }
-        // additional personal fields as needed
+
+        [StringLength(500, ErrorMessage = "Summary must be at most 500 characters.")]
+        [Display(Name = "Summary")]
+        public string? Summary { get; set; }
     }
 
     public class EducationItem
