@@ -13,50 +13,50 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-    .education-item:hover,
-    .work-item:hover,
-    .skill-item:hover {
-        border-color: #3182ce;
-        box-shadow: 0 4px 12px rgba(60, 72, 88, 0.15);
-    }
+.education-item:hover,
+.work-item:hover,
+.skill-item:hover {
+    border-color: #3182ce;
+    box-shadow: 0 4px 12px rgba(60, 72, 88, 0.15);
+}
 
-    /* Labels */
-    .education-item label,
-    .work-item label,
-    .skill-item label {
-        font-weight: 500;
-        color: #374151;
-    }
+/* Labels */
+.education-item label,
+.work-item label,
+.skill-item label {
+    font-weight: 500;
+    color: #374151;
+}
 
-    /* Inputs & Textareas */
-    .education-item .form-control,
-    .work-item .form-control,
-    .skill-item .form-control,
-    .education-item textarea,
-    .work-item textarea,
-    .skill-item textarea {
-        background-color: #f9fafb;
-        border: 1px solid #cbd5e1;
-        border-radius: 4px;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
+/* Inputs & Textareas */
+.education-item .form-control,
+.work-item .form-control,
+.skill-item .form-control,
+.education-item textarea,
+.work-item textarea,
+.skill-item textarea {
+    background-color: #f9fafb;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
-        .education-item .form-control:focus,
-        .work-item .form-control:focus,
-        .skill-item .form-control:focus,
-        .education-item textarea:focus,
-        .work-item textarea:focus,
-        .skill-item textarea:focus {
-            border-color: #3182ce;
-            box-shadow: 0 0 0 2px #bee3f8;
-        }
+.education-item .form-control:focus,
+.work-item .form-control:focus,
+.skill-item .form-control:focus,
+.education-item textarea:focus,
+.work-item textarea:focus,
+.skill-item textarea:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px #bee3f8;
+}
 
-    /* Add-button wrapper spacing */
-    .education-item .form-group.col-md-12,
-    .work-item .form-group.col-md-12,
-    .skill-item .form-group.col-md-12 {
-        margin-top: 1rem;
-    }
+/* Add-button wrapper spacing */
+.education-item .form-group.col-md-12,
+.work-item .form-group.col-md-12,
+.skill-item .form-group.col-md-12 {
+    margin-top: 1rem;
+}
 
 #add-education,
 #add-work,
@@ -74,32 +74,32 @@
     margin-bottom: 1rem;
 }
 
-    .personal-item .card-header {
-        background-color: #f1f5f9;
-        border-bottom: 1px solid #e2e8f0;
-        font-weight: 600;
-        color: #374151;
-    }
+.personal-item .card-header {
+    background-color: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    color: #374151;
+}
 
-    .personal-item .card-body {
-        padding: 1rem;
-    }
+.personal-item .card-body {
+    padding: 1rem;
+}
 
-    .personal-item .form-control {
-        background-color: #f9fafb;
-        border: 1px solid #cbd5e1;
-        border-radius: 4px;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
+.personal-item .form-control {
+    background-color: #f9fafb;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
-        .personal-item .form-control:focus {
-            border-color: #3182ce;
-            box-shadow: 0 0 0 2px #bee3f8;
-        }
+.personal-item .form-control:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px #bee3f8;
+}
 
-    .personal-item .form-group {
-        margin-bottom: 1rem;
-    }
+.personal-item .form-group {
+    margin-bottom: 1rem;
+}
 
 /* ——— Preview Tiles (Added Items) ——— */
 /* Common tile base */
@@ -119,10 +119,11 @@
     cursor: pointer;
 }
 
-    /* Hover lift & red highlight */
+/* Hover lift & red highlight */
     .education-tile:hover,
     .work-tile:hover,
-    #added-skills-container .badge:hover {
+    #added-skills-container .badge:hover,
+    #added-languages-container .badge:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(60, 72, 88, 0.12);
         background-color: #f8d7da;
@@ -130,69 +131,68 @@
         color: #721c24;
     }
 
-    /* Tile header (Institution/Degree or Company/Position) */
-    .education-tile > strong,
-    .work-tile > .work-content > strong {
-        font-size: 1.1rem;
-        color: #2d3748;
-        margin-bottom: 0.5rem;
-    }
+/* Tile header (Institution/Degree or Company/Position) */
+.education-tile > strong,
+.work-tile > .work-content > strong {
+    font-size: 1.1rem;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
 
-    /* Tile dates */
-    .education-tile > small,
-    .work-tile > .work-content > small {
-        font-size: 0.9rem;
-        color: #4a5568;
-        margin-bottom: 0.5rem;
-    }
+/* Tile dates */
+.education-tile > small,
+.work-tile > .work-content > small {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
 
-    /* Tile description/responsibilities */
-    .education-tile .education-desc,
-    .work-tile .responsibilities {
-        font-size: 0.9rem;
-        color: #2d3748;
-        font-style: italic;
-        margin-top: 0.25rem;
-    }
+/* Tile description/responsibilities */
+.education-tile .education-desc,
+.work-tile .responsibilities {
+    font-size: 0.9rem;
+    color: #2d3748;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
 
 /* —— Skill tiles: wrap and style —— */
-#added-skills-container {
+#added-skills-container,
+#added-languages-container {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
 }
 
 /* make each badge behave like a tile */
-#added-skills-container .badge {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex: 0 1 auto; /* shrink and grow */
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    box-shadow: 0 2px 8px rgba(60, 72, 88, 0.06);
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    cursor: pointer;
-}
+    #added-skills-container .badge,
+    #added-languages-container .badge {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex: 0 1 auto; /* shrink and grow */
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 2px 8px rgba(60, 72, 88, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2d3748;
+        line-height: 1.2;
+    }
 
-
-/* the main text (name + level) */
-#added-skills-container .badge {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #2d3748;
-    line-height: 1.2;
-}
 
 /* description inside <small> */
-#added-skills-container .badge small {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: #4a5568;
-}
+    #added-skills-container .badge small,
+    #added-languages-container .badge small {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: #4a5568;
+    }
 
 .form-control-file {
     display: block; /* force block so input sits under its label */

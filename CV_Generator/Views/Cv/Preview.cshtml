@@ -14,6 +14,12 @@
                 class="cv-photo rounded" />
         </div>
     }
+        @if (!string.IsNullOrWhiteSpace(Model.Personal.Summary))
+        {
+      <div class="cv-summary mb-4">
+        <p>@Model.Personal.Summary</p>
+      </div>
+        }
     <h1>@Model.Personal.FullName</h1>
     <p><strong>Email:</strong> @Model.Personal.Email</p>
     <p><strong>Phone:</strong> @Model.Personal.CountryCode @Model.Personal.PhoneNumber</p>
@@ -117,5 +123,20 @@
                 }
           </ul>
         }
+
+        @* --- Languages --- *@
+        @if (Model.Languages?.Any(l => l.HasEssentialData) == true)
+        {
+        <h3>Languages</h3>
+        <div class="d-flex flex-wrap mb-4">
+                @foreach (var lang in Model.Languages.Where(l => l.HasEssentialData))
+                {
+                    <div class="badge badge-light text-dark m-1 p-2 language-tile">
+                        <strong>@lang.Name</strong> – @lang.Level
+                    </div>
+                }
+        </div>
+        }
+
   </div>
 </div>
