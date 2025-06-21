@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace CvGenerator.Models
 {
-    public class CurriculumVitae
+    public class CurriculumVitae : IValidatableObject
     {
         public int Id { get; set; }
 
@@ -15,6 +16,21 @@ namespace CvGenerator.Models
         public List<EducationItem> Education { get; set; }
         public List<WorkExperience> Experience { get; set; }
         public List<Skill> Skills { get; set; }
+
+        // here comes our validation for Languages:
+        public List<LanguageItem> Languages { get; set; } = new();
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            // enforce at least one language
+            if (!Languages.Any(l => l.HasEssentialData))
+            {
+                yield return new ValidationResult(
+                    "Add at least one language.",
+                    new[] { nameof(Languages) }
+                );
+            }
+        }
     }
 
     public class PersonalInfo
@@ -129,4 +145,16 @@ namespace CvGenerator.Models
             !string.IsNullOrWhiteSpace(Name);
          
     }
+    public class LanguageItem
+    {
+        public string? Name { get; set; }
+        public string? Level { get; set; }
+
+        public static readonly string[] Levels =
+          { "A1","A2","B1","B2","C1","C2","Native" };
+
+        public bool HasEssentialData => !string.IsNullOrWhiteSpace(Name);
+    }
+
+
 }

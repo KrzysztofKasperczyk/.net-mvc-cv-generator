@@ -123,5 +123,20 @@
                 }
           </ul>
         }
+
+        @* --- Languages --- *@
+        @if (Model.Languages?.Any(l => l.HasEssentialData) == true)
+        {
+        <h3>Languages</h3>
+        <div class="d-flex flex-wrap mb-4">
+                @foreach (var lang in Model.Languages.Where(l => l.HasEssentialData))
+                {
+                    <div class="badge badge-light text-dark m-1 p-2 language-tile">
+                        <strong>@lang.Name</strong> – @lang.Level
+                    </div>
+                }
+        </div>
+        }
+
   </div>
 </div>

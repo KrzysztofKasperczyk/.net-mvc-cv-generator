@@ -10,6 +10,8 @@
 	vdEntryWork.TemplateInfo.HtmlFieldPrefix = "EntryWork";
 	var vdEntryEducation = new ViewDataDictionary(ViewData);
 	vdEntryEducation.TemplateInfo.HtmlFieldPrefix = "EntryEducation";
+	var vdEntryLang = new ViewDataDictionary(ViewData);
+	vdEntryLang.TemplateInfo.HtmlFieldPrefix = "EntryLanguage";
 }
 
 <h1>Create Your CV</h1>
@@ -149,9 +151,39 @@
   <!-- Hidden inputs for model binding -->
   <div id="skills-inputs"></div>
 
+        <!-- Languages Preview Tiles -->
+  <div class="card mb-4">
+    <div class="card-header">Added Languages</div>
+    <div class="card-body">
+      <div id="added-languages-container" class="d-flex flex-wrap"></div>
+    </div>
+  </div>
 
-	<button type="submit" class="btn btn-primary">Preview CV</button>
+  <!-- Language Entry -->
+  <div class="card mb-4">
+    <div class="card-header">New Language</div>
+    <div class="card-body">
+            @Html.Partial("_LanguageItem", new CvGenerator.Models.LanguageItem(), vdEntryLang)
+      <button type="button" id="add-language" class="btn btn-sm btn-outline-primary mt-2">
+        Add Language
+      </button>
+    </div>
+  </div>
+
+  <!-- Hidden inputs for model binding -->
+  <div id="languages-inputs"></div>
+
+  <!-- validation message if none added -->
+  <span asp-validation-for="Languages" class="text-danger"></span>
+
+  <!-- SUBMIT BUTTON in a matching 2-column grid -->
+  <div class="row mb-4">
+    <div class="col-12 col-md-6">
+      <button type="submit" class="btn btn-primary">Preview CV</button>
+    </div>
+  </div>
 </form>
+
 
 @* Hidden template for new skill rows *@
 <div id="skill-template" style="display:none;">
@@ -163,293 +195,288 @@
 </div>
 
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
-<script>
-$(function() {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+        <script>
+        $(function() {
+            // helper: format YYYY-MM to MM-YYYY
+            function formatYM(d) {
+                var parts = d.split('-');
+                return parts[1] + '-' + parts[0];
+            }
 
-	function formatYM(d) {
-		var parts = d.split('-');
-		return parts[1] + '-' + parts[0];
-	}
-	// Counters for dynamic lists
-	var skillIndex = 0;
-	var workIndex = 0;
-	var educationIndex = 0;
+            // Counters for dynamic lists
+            var skillIndex     = 0;
+            var workIndex      = 0;
+            var educationIndex = 0;
+            var langIndex      = @Model.Languages.Count;
 
+            // —— EDUCATION —— 
+            $('#add-education').on('click', function(){
+                var inst  = $('[name="EntryEducation.Institution"]').val();
+                var deg   = $('[name="EntryEducation.Degree"]').val();
+                var start = $('[name="EntryEducation.StartDate"]').val();
+                var end   = $('[name="EntryEducation.EndDate"]').val();
+                var ong   = $('[name="EntryEducation.IsOngoing"]').is(':checked');
+                var desc  = $('[name="EntryEducation.Description"]').val();
 
-// ADD EDUCATION
-$('#add-education').on('click', function(){
-	// read entry fields (prefix EntryEducation)
-	var inst  = $('[name="EntryEducation.Institution"]').val();
-	var deg   = $('[name="EntryEducation.Degree"]').val();
-	var start = $('[name="EntryEducation.StartDate"]').val();
-	var end   = $('[name="EntryEducation.EndDate"]').val();
-	var ong   = $('[name="EntryEducation.IsOngoing"]').is(':checked');
-	var desc  = $('[name="EntryEducation.Description"]').val();
+                if (!inst || !deg) {
+                    alert('Please enter both Institution and Degree.');
+                    return;
+                }
 
-	if (!inst || !deg) {
-	alert('Please enter both Institution and Degree.');
-	return;
-	}
+                var dates = start ? formatYM(start) : '';
+                if (ong)       dates += ' – Present';
+                else if (end)  dates += ' – ' + formatYM(end);
 
-	// build the date string without days
-	var dates = start ? formatYM(start) : '';
-	if (ong)       dates += ' – Present';
-	else if (end)  dates += ' – ' + formatYM(end);
+                var tileHtml =
+                  '<div class="education-tile mb-2 p-2 border rounded" data-index="' + educationIndex + '">' +
+                    '<strong>' + inst + '</strong> ' + deg + '<br>' +
+                    '<small>' + dates + '</small>' +
+                    (desc
+                      ? '<br><small class="education-desc">' +
+                        desc.replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+                        '</small>'
+                      : ''
+                    ) +
+                  '</div>';
 
-	// build the tile HTML
-	var tileHtml =
-	'<div class="education-tile mb-2 p-2 border rounded" data-index="' + educationIndex + '">' +
-		'<strong>' + inst + '</strong> ' + deg + '<br>' +
-		'<small>' + dates + '</small>' +
-		(desc
-			? '<br><small class="education-desc">' +
-			desc.replace(/</g,'&lt;').replace(/>/g,'&gt;') +
-			'</small>'
-			: ''
-		) +
-	'</div>';
+                $('#added-education-container').append(tileHtml);
 
-	// append to preview container
-	$('#added-education-container').append(tileHtml);
+                var base = 'Education[' + educationIndex + ']';
+                $('<input>').attr({ type:'hidden', name: base + '.Institution', value: inst }).appendTo('#education-inputs');
+                $('<input>').attr({ type:'hidden', name: base + '.Degree',      value: deg }).appendTo('#education-inputs');
+                $('<input>').attr({ type:'hidden', name: base + '.StartDate',   value: start }).appendTo('#education-inputs');
+                $('<input>').attr({ type:'hidden', name: base + '.EndDate',     value: end }).appendTo('#education-inputs');
+                $('<input>').attr({ type:'hidden', name: base + '.IsOngoing',   value: ong }).appendTo('#education-inputs');
+                $('<input>').attr({ type:'hidden', name: base + '.Description', value: desc }).appendTo('#education-inputs');
 
-	// create hidden inputs for model binding
-	var base = 'Education[' + educationIndex + ']';
-	$('<input>').attr({ type:'hidden', name: base + '.Institution', value: inst })
-				.appendTo('#education-inputs');
-	$('<input>').attr({ type:'hidden', name: base + '.Degree',      value: deg })
-				.appendTo('#education-inputs');
-	$('<input>').attr({ type:'hidden', name: base + '.StartDate',   value: start })
-				.appendTo('#education-inputs');
-	$('<input>').attr({ type:'hidden', name: base + '.EndDate',     value: end })
-				.appendTo('#education-inputs');
-	$('<input>').attr({ type:'hidden', name: base + '.IsOngoing',   value: ong })
-				.appendTo('#education-inputs');
-	$('<input>').attr({ type:'hidden', name: base + '.Description', value: desc })
-				.appendTo('#education-inputs');
+                educationIndex++;
+                $('[name="EntryEducation.Institution"]').val('');
+                $('[name="EntryEducation.Degree"]').val('');
+                $('[name="EntryEducation.StartDate"]').val('');
+                $('[name="EntryEducation.EndDate"]').val('');
+                $('[name="EntryEducation.IsOngoing"]').prop('checked', false);
+                $('[name="EntryEducation.Description"]').val('');
+            });
 
-	educationIndex++;
+            $(document).on('click', '.education-tile', function(){
+                var idx = $(this).data('index');
+                $(this).remove();
+                $('#education-inputs input').filter(function(){
+                    return this.name.indexOf('Education[' + idx + ']') === 0;
+                }).remove();
+            });
 
-	// clear entry form
-	$('[name="EntryEducation.Institution"]').val('');
-	$('[name="EntryEducation.Degree"]').val('');
-	$('[name="EntryEducation.StartDate"]').val('');
-	$('[name="EntryEducation.EndDate"]').val('');
-	$('[name="EntryEducation.IsOngoing"]').prop('checked', false);
-	$('[name="EntryEducation.Description"]').val('');
-});
+            // —— SKILLS —— 
+            $('#add-skill').on('click', function(){
+                var name  = $('[name="EntrySkill.Name"]').val();
+                var level = $('[name="EntrySkill.Level"]').val();
+                var desc  = $('[name="EntrySkill.Description"]').val();
 
-// CLICK ON TILE TO REMOVE EDUCATION
-$(document).on('click', '.education-tile', function(){
-	var $t = $(this), idx = $t.data('index');
-	$t.remove();
-	// remove matching hidden inputs
-	$('#education-inputs input').filter(function(){
-	return this.name.indexOf('Education[' + idx + ']') === 0;
-	}).remove();
-});
+                if (!name) {
+                    alert('Please enter skill name.');
+                    return;
+                }
 
-	// ADD SKILL
-	$('#add-skill').on('click', function(){
-		// read entry fields (prefix EntrySkill)
-		var name  = $('[name="EntrySkill.Name"]').val();
-		var level = $('[name="EntrySkill.Level"]').val();
-		var desc  = $('[name="EntrySkill.Description"]').val();
+                var $tile = $(
+                  '<div class="badge badge-light text-dark m-1 p-2" data-index="'+skillIndex+'">'+
+                    name + ' <br> (Lvl ' + level + '/100)' +
+                    (desc ? '<div><small>'+ desc +'</small></div>' : '') +
+                  '</div>'
+                );
+                $('#added-skills-container').append($tile);
 
-		if (!name) {
-		alert('Please enter skill name.');
-		return;
-		}
+                $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Name', value:name}).appendTo('#skills-inputs');
+                $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Level', value:level}).appendTo('#skills-inputs');
+                $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Description', value:desc}).appendTo('#skills-inputs');
 
-		// render badge tile
-		var $tile = $(
-		'<div class="badge badge-light text-dark m-1 p-2" data-index="'+skillIndex+'">'+
-			name + ' (Lvl ' + level + ')' +
-			(desc ? '<div><small>'+ desc +'</small></div>' : '') +
-		'</div>'
-		);
-		$('#added-skills-container').append($tile);
+                skillIndex++;
+                $('[name="EntrySkill.Name"]').val('');
+                $('[name="EntrySkill.Level"]').val('1');
+                $('[name="EntrySkill.Description"]').val('');
+            });
 
-		// hidden inputs for model binding
-		$('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Name', value:name})
-					.appendTo('#skills-inputs');
-		$('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Level', value:level})
-					.appendTo('#skills-inputs');
-		$('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Description', value:desc})
-					.appendTo('#skills-inputs');
+            $(document).on('click', '#added-skills-container .badge', function(){
+                var idx = $(this).data('index');
+                $(this).remove();
+                $('#skills-inputs input').filter(function(){
+                    return this.name.indexOf('Skills['+idx+']') === 0;
+                }).remove();
+            });
 
-		skillIndex++;
+            // —— WORK EXPERIENCE —— 
+            $('#add-work').on('click', function() {
+                var prefix    = 'EntryWork';
+                var company   = $('[name="'+prefix+'.Company"]').val();
+                var position  = $('[name="'+prefix+'.Position"]').val();
+                var startDate = $('[name="'+prefix+'.StartDate"]').val();
+                var endDate   = $('[name="'+prefix+'.EndDate"]').val();
+                var isOng     = $('[name="'+prefix+'.IsOngoing"]').is(':checked');
+                var resp      = $('[name="'+prefix+'.Responsibilities"]').val();
 
-		// clear entry form
-		$('[name="EntrySkill.Name"]').val('');
-		$('[name="EntrySkill.Level"]').val('1');
-		$('[name="EntrySkill.Description"]').val('');
-	});
+                if (!company || !position) {
+                    alert('Please enter both Company and Position.');
+                    return;
+                }
 
-	// CLICK ON BADGE TO REMOVE SKILL
-	$(document).on('click', '#added-skills-container .badge', function(){
-		var idx = $(this).data('index');
-		$(this).remove();
-		$('#skills-inputs input').filter(function(){
-		return this.name.indexOf('Skills['+idx+']') === 0;
-		}).remove();
-	});
+                var idx   = workIndex;
+                var dates = startDate||'';
+                if (isOng)       dates += ' – Present';
+                else if (endDate) dates += ' – ' + endDate;
 
-				
-	// handler for adding new Experience
-		$('#add-work').on('click', function() {
-			var prefix    = 'EntryWork';
-			var company   = $('[name="'+prefix+'.Company"]').val();
-			var position  = $('[name="'+prefix+'.Position"]').val();
-			var startDate = $('[name="'+prefix+'.StartDate"]').val();
-			var endDate   = $('[name="'+prefix+'.EndDate"]').val();
-			var isOng     = $('[name="'+prefix+'.IsOngoing"]').is(':checked');
-			var resp      = $('[name="'+prefix+'.Responsibilities"]').val();
+                var tileHtml =
+                  '<div class="work-tile mb-2" data-index="' + idx + '">' +
+                    '<div class="work-content">' +
+                      '<strong>' + company + '</strong> – ' + position + '<br>' +
+                      '<small>' + dates + '</small>' +
+                      (resp
+                        ? '<br><small class="responsibilities">'+ resp.replace(/</g,'&lt;').replace(/>/g,'&gt;') +'</small>'
+                        : ''
+                      ) +
+                    '</div>' +
+                  '</div>';
 
-			if (!company || !position) {
-			alert('Please enter both Company and Position.');
-			return;
-			}
+                $('#added-work-container').append(tileHtml);
 
-			// compute a local index
-			var idx = workIndex;
+                var base = 'Experience['+idx+']';
+                $('<input>').attr({type:'hidden', name: base+'.Company', value:company}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base+'.Position', value:position}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base+'.StartDate', value:startDate}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base+'.EndDate', value:endDate}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base+'.IsOngoing', value:isOng}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base+'.Responsibilities', value:resp}).appendTo('#work-inputs');
 
-			// format dates
-			var dates = startDate||'';
-			if (isOng)      dates += ' – Present';
-			else if (endDate) dates += ' – ' + endDate;
+                workIndex++;
+                $('[name="'+prefix+'.Company"]').val('');
+                $('[name="'+prefix+'.Position"]').val('');
+                $('[name="'+prefix+'.StartDate"]').val('');
+                $('[name="'+prefix+'.EndDate"]').val('');
+                $('[name="'+prefix+'.IsOngoing"]').prop('checked', false);
+                $('[name="'+prefix+'.Responsibilities"]').val('');
+            });
 
-			// build the HTML, now using idx
-			var tileHtml =
-			'<div class="work-tile mb-2" data-index="' + idx + '">' +
-				'<div class="work-content">' +
-				'<strong>' + company + '</strong> – ' + position + '<br>' +
-				'<small>' + dates + '</small>' +
-				// append responsibilities only if non-empty
-				(resp
-					? '<br><small class="responsibilities">Resp: ' 
-					+ resp.replace(/</g,'&lt;').replace(/>/g,'&gt;') 
-					+ '</small>'
-					: ''
-				) +
-				'</div>' +
-			'</div>';
+            $(document).on('click', '.work-tile', function() {
+                var idx = $(this).data('index');
+                $(this).remove();
+                $('#work-inputs input').filter(function() {
+                    return this.name.startsWith('Experience[' + idx + ']');
+                }).remove();
+            });
 
-			// append to container
-			$('#added-work-container').append(tileHtml);
+            // —— PHONE MASK —— 
+            $('#Personal_PhoneNumber').on('input', function() {
+                var val = this.value.replace(/\D/g, '').substring(0,9);
+                var parts = val.match(/.{1,3}/g) || [];
+                this.value = parts.join('-');
+            });
 
-			// create your hidden inputs exactly as before…
-			var base = 'Experience['+idx+']';
-			$('<input>').attr({type:'hidden', name: base+'.Company',      value:company}).appendTo('#work-inputs');
-			$('<input>').attr({type:'hidden', name: base+'.Position',     value:position}).appendTo('#work-inputs');
-			$('<input>').attr({type:'hidden', name: base+'.StartDate',    value:startDate}).appendTo('#work-inputs');
-			$('<input>').attr({type:'hidden', name: base+'.EndDate',      value:endDate}).appendTo('#work-inputs');
-			$('<input>').attr({type:'hidden', name: base+'.IsOngoing',    value:isOng}).appendTo('#work-inputs');
-			$('<input>').attr({type:'hidden', name: base+'.Responsibilities', value:resp}).appendTo('#work-inputs');
+            // —— AUTOCOMPLETE —— 
+            $('#institution-autocomplete').autocomplete({
+                source: '@Url.Action("SearchInstitutions", "Cv")',
+                minLength: 2,
+                delay: 200
+            });
+            $("#degree-autocomplete").autocomplete({
+                source: '@Url.Action("SearchDegrees", "Cv")',
+                minLength: 2,
+                delay: 200
+            });
 
-			// bump your counter
-			workIndex++;
+            // —— DATE RESTRICTIONS —— 
+            var today = new Date().toISOString().split('T')[0];
+            $('input[type="date"][id$="StartDate"]')
+              .attr('max', today)
+              .on('change', function(){
+                if (this.value > today) this.value = today;
+            });
+            $('input[type="date"]').on('change', function(){
+                var name = $(this).attr('name');
+                if (name.endsWith('.StartDate')) {
+                    var endName = name.replace('.StartDate', '.EndDate');
+                    var $end = $('input[name="'+endName+'"]');
+                    $end.attr('min', this.value);
+                    if ($end.val() && $end.val() < this.value) $end.val(this.value);
+                }
+                if (name.endsWith('.EndDate')) {
+                    var startName = name.replace('.EndDate', '.StartDate');
+                    var startVal = $('input[name="'+startName+'"]').val();
+                    if (startVal && this.value < startVal) this.value = startVal;
+                }
+            });
 
-		// clear entry form
-		$('[name="' + prefix + '.Company"]').val('');
-		$('[name="' + prefix + '.Position"]').val('');
-		$('[name="' + prefix + '.StartDate"]').val('');
-		$('[name="' + prefix + '.EndDate"]').val('');
-		$('[name="' + prefix + '.IsOngoing"]').prop('checked', false);
-		$('[name="' + prefix + '.Responsibilities"]').val('');
-	});
+            // —— PHOTO PREVIEW —— 
+            $('#Photo').on('change', function(evt) {
+                var file = evt.target.files[0];
+                if (!file || !file.type.startsWith('image/')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#photo-preview').attr('src', e.target.result).show();
+                };
+                reader.readAsDataURL(file);
+            });
 
-	// delegate click on tile to remove it and its hidden inputs
-	$(document).on('click', '.work-tile', function() {
-		var $tile = $(this);
-		var idx   = $tile.data('index');
-		$tile.remove();
-		// remove corresponding hidden inputs
-		$('#work-inputs input').filter(function() {
-			return this.name.startsWith('Experience[' + idx + ']');
-		}).remove();
-	});
+            // —— LANGUAGES —— 
+            $('#add-language').click(function(){
+                var prefix = 'EntryLanguage';
+                var name  = $('[name="'+prefix+'.Name"]').val();
+                var level = $('[name="'+prefix+'.Level"]').val();
 
+                if (!name) {
+                    alert('Please enter a language name.');
+                    return;
+                }
 
-	// phone input mask
-	$('#Personal_PhoneNumber').on('input', function() {
-		var val = this.value.replace(/\D/g, '').substring(0,9);
-		var parts = val.match(/.{1,3}/g) || [];
-		this.value = parts.join('-');
-	});
+                var $tile = $(
+                  '<div class="language-tile badge badge-light text-dark m-1 p-2" data-index="'+langIndex+'">'+
+                    name + ' <br> ' + level +
+                  '</div>'
+                );
+                $('#added-languages-container').append($tile);
 
-	// institution autocomplete
-	$('#institution-autocomplete').autocomplete({
-		source: '@Url.Action("SearchInstitutions", "Cv")',
-		minLength: 2,
-		delay: 200
-	});
+                var base = 'Languages['+langIndex+']';
+                $('<input>').attr({ type:'hidden', name: base + '.Name',  value: name  }).appendTo('#languages-inputs');
+                $('<input>').attr({ type:'hidden', name: base + '.Level', value: level }).appendTo('#languages-inputs');
 
-	$("#degree-autocomplete").autocomplete({
-		source: "@Url.Action("SearchDegrees", "Cv")",
-		minLength: 2,
-		delay: 200
-	});
+                langIndex++;
+                $('[name="'+prefix+'.Name"]').val('');
+                $('[name="'+prefix+'.Level"]').val('A1');
+            });
 
-	// get today in YYYY-MM-DD format
-	var today = new Date().toISOString().split('T')[0];
+            $(document).on('click', '.language-tile, .remove-language', function(){
+                var $el = $(this).hasClass('language-tile') ? $(this) : $(this).closest('.language-item');
+                var idx = $el.data('index');
+                $('[data-index="'+idx+'"]').remove();
+                $('#languages-inputs input').filter(function(){
+                    return this.name.indexOf('Languages['+idx+']')===0;
+                }).remove();
+            });
+        });
 
-	// only restrict future dates on all StartDate inputs
-	$('input[type="date"][id$="StartDate"]')
-		.attr('max', today)
-		.on('change', function(){
-		// if user manually enters a future date, reset to today
-		if (this.value > today) {
-			this.value = today;
-		}
-	});
+        // autocomplete for language names
+        $('#EntryLanguage_Name').autocomplete({
+          source: '@Url.Action("SearchLanguages", "Cv")',
+          minLength: 1,
+          delay: 200
+        });
 
-	// restrict EndDate to not be before StartDate
-		//  ensure EndDate is never before its corresponding StartDate
-	$('input[type="date"]').on('change', function(){
-		var $input = $(this);
-		var name   = $input.attr('name');
-
-		// if a StartDate changed, update the min on its matching EndDate
-		if (name.endsWith('.StartDate')) {
-		var endName = name.replace('.StartDate', '.EndDate');
-		var $end    = $('input[name="' + endName + '"]');
-		$end.attr('min', $input.val());
-		if ($end.val() && $end.val() < $input.val()) {
-			$end.val($input.val());
-		}
-		}
-
-		// if an EndDate changed, prevent it being before its matching StartDate
-		if (name.endsWith('.EndDate')) {
-		var startName = name.replace('.EndDate', '.StartDate');
-		var startVal  = $('input[name="' + startName + '"]').val();
-		if (startVal && $input.val() < startVal) {
-			$input.val(startVal);
-		}
-		}
-	});
-
-		// CV Photo preview
-	  document.getElementById('Photo').addEventListener('change', function(evt) {
-	  var file = evt.target.files[0];
-	  if (!file) return;
-	  if (!file.type.startsWith('image/')) {
-		alert('Wybierz plik obrazkowy.');
-		return;
-	  }
-	  var reader = new FileReader();
-	  reader.onload = function(e) {
-		var img = document.getElementById('photo-preview');
-		img.src = e.target.result;
-		img.style.display = 'block';
-	  };
-	  reader.readAsDataURL(file);
-	});
-
-});
+            
 </script>
 
+        <!-- hidden template for clones -->
+        <script type="text/html" id="language-template">
+        @Html.Raw(
+                     Html.Partial("_LanguageItem",
+                         new CvGenerator.Models.LanguageItem(),
+                         new ViewDataDictionary(ViewData)
+                {
+                    TemplateInfo = { HtmlFieldPrefix = "Languages[__index__]" }
+                }
+                     ).ToString()
+                 )
+        </script>
 }
