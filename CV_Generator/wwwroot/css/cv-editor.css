@@ -1,63 +1,64 @@
-﻿/* cv-editor.css */
+﻿/* —— Editor Card Styles (Education, Work, Skill) —— */
 
-/* ——— Editor Row Cards (Education, Work, Skill) ——— */
-.education-item,
-.work-item,
-.skill-item {
+.card.education,
+.card.work,
+.card.skill {
     background-color: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
     box-shadow: 0 2px 6px rgba(60, 72, 88, 0.08);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s ease;
 }
 
-.education-item:hover,
-.work-item:hover,
-.skill-item:hover {
-    border-color: #3182ce;
-    box-shadow: 0 4px 12px rgba(60, 72, 88, 0.15);
-}
+    .card.education:hover .card-body,
+    .card.work:hover .card-body,
+    .card.skill:hover .card-body {
+        border-color: #3182ce;
+        box-shadow: 0 4px 12px rgba(60, 72, 88, 0.15);
+    }
 
-/* Labels */
-.education-item label,
-.work-item label,
-.skill-item label {
-    font-weight: 500;
+    .card.education .card-body,
+    .card.work .card-body,
+    .card.skill .card-body {
+        padding: 1.25rem 1.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+/* Labels & Inputs */
+.card-body label {
+    font-weight: 600;
     color: #374151;
+    margin-bottom: 0.25rem;
+    display: inline-block;
 }
 
-/* Inputs & Textareas */
-.education-item .form-control,
-.work-item .form-control,
-.skill-item .form-control,
-.education-item textarea,
-.work-item textarea,
-.skill-item textarea {
+.card-body .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.card-body .form-control,
+.card-body select,
+.card-body textarea {
     background-color: #f9fafb;
     border: 1px solid #cbd5e1;
     border-radius: 4px;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.95rem;
+    width: 100%;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.education-item .form-control:focus,
-.work-item .form-control:focus,
-.skill-item .form-control:focus,
-.education-item textarea:focus,
-.work-item textarea:focus,
-.skill-item textarea:focus {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px #bee3f8;
-}
+    .card-body .form-control:focus,
+    .card-body select:focus,
+    .card-body textarea:focus {
+        border-color: #3182ce;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.25);
+    }
 
-/* Add-button wrapper spacing */
-.education-item .form-group.col-md-12,
-.work-item .form-group.col-md-12,
-.skill-item .form-group.col-md-12 {
-    margin-top: 1rem;
-}
-
+/* Buttons */
 #add-education,
 #add-work,
 #add-skill {
@@ -65,7 +66,13 @@
     font-size: 0.9rem;
 }
 
-/* ——— Personal Information Card ——— */
+.btn {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+}
+
+/* —— Personal Information Card —— */
+
 .personal-item {
     background-color: #ffffff;
     border: 1px solid #e2e8f0;
@@ -74,35 +81,38 @@
     margin-bottom: 1rem;
 }
 
-.personal-item .card-header {
-    background-color: #f1f5f9;
-    border-bottom: 1px solid #e2e8f0;
-    font-weight: 600;
-    color: #374151;
-}
+    .personal-item .card-header {
+        background-color: #f1f5f9;
+        border-bottom: 1px solid #e2e8f0;
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #374151;
+        padding: 0.75rem 1.25rem;
+    }
 
-.personal-item .card-body {
-    padding: 1rem;
-}
+    .personal-item .card-body {
+        padding: 1.25rem 1.5rem;
+    }
 
-.personal-item .form-control {
-    background-color: #f9fafb;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
+    .personal-item .form-control {
+        background-color: #f9fafb;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        padding: 0.625rem 0.75rem;
+    }
 
-.personal-item .form-control:focus {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px #bee3f8;
-}
+        .personal-item .form-control:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 2px #bee3f8;
+        }
 
-.personal-item .form-group {
-    margin-bottom: 1rem;
-}
+    .personal-item .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-/* ——— Preview Tiles (Added Items) ——— */
-/* Common tile base */
+/* —— Preview Tiles (Education, Work, Skills, Languages) —— */
+
 .education-tile,
 .work-tile {
     display: flex;
@@ -119,7 +129,6 @@
     cursor: pointer;
 }
 
-/* Hover lift & red highlight */
     .education-tile:hover,
     .work-tile:hover,
     #added-skills-container .badge:hover,
@@ -131,32 +140,30 @@
         color: #721c24;
     }
 
-/* Tile header (Institution/Degree or Company/Position) */
-.education-tile > strong,
-.work-tile > .work-content > strong {
-    font-size: 1.1rem;
-    color: #2d3748;
-    margin-bottom: 0.5rem;
-}
+    .education-tile > strong,
+    .work-tile > .work-content > strong {
+        font-size: 1.1rem;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
 
-/* Tile dates */
-.education-tile > small,
-.work-tile > .work-content > small {
-    font-size: 0.9rem;
-    color: #4a5568;
-    margin-bottom: 0.5rem;
-}
+    .education-tile > small,
+    .work-tile > .work-content > small {
+        font-size: 0.9rem;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+    }
 
-/* Tile description/responsibilities */
-.education-tile .education-desc,
-.work-tile .responsibilities {
-    font-size: 0.9rem;
-    color: #2d3748;
-    font-style: italic;
-    margin-top: 0.25rem;
-}
+    .education-tile .education-desc,
+    .work-tile .responsibilities {
+        font-size: 0.9rem;
+        color: #2d3748;
+        font-style: italic;
+        margin-top: 0.25rem;
+    }
 
-/* —— Skill tiles: wrap and style —— */
+/* —— Skills & Languages Badges —— */
+
 #added-skills-container,
 #added-languages-container {
     display: flex;
@@ -164,13 +171,12 @@
     gap: 0.75rem;
 }
 
-/* make each badge behave like a tile */
     #added-skills-container .badge,
     #added-languages-container .badge {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        flex: 0 1 auto; /* shrink and grow */
+        flex: 0 1 auto;
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 8px;
@@ -184,27 +190,36 @@
         line-height: 1.2;
     }
 
+        #added-skills-container .badge small,
+        #added-languages-container .badge small {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #4a5568;
+        }
 
-/* description inside <small> */
-    #added-skills-container .badge small,
-    #added-languages-container .badge small {
-        margin-top: 0.5rem;
-        font-size: 0.85rem;
-        font-weight: 400;
-        color: #4a5568;
-    }
+/* —— Misc —— */
 
 .form-control-file {
-    display: block; /* force block so input sits under its label */
+    display: block;
 }
 
 .cv-photo {
-    display: block; /* ensure block-level and left-aligned */
+    display: block;
     width: 150px;
     height: 200px;
     object-fit: cover;
     border: 1px solid #cbd5e1;
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    margin-top: 0.5rem; /* small gap under the file input */
+    margin-top: 0.5rem;
+}
+
+.form-check {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.card + .card {
+    margin-top: 1rem;
 }
