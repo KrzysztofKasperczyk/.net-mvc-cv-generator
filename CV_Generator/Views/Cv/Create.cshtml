@@ -92,14 +92,34 @@
 
 
 
+    @* Add Section dropdown *@
+<div class="mb-4">
+  <div class="dropdown">
+    <button class="btn btn-outline-primary dropdown-toggle" 
+            type="button" 
+            id="addSectionBtn" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false">
+      Add Section
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="addSectionBtn">
+      <li><a class="dropdown-item" href="#" data-section="education">Education</a></li>
+      <li><a class="dropdown-item" href="#" data-section="work">Work Experience</a></li>
+      <li><a class="dropdown-item" href="#" data-section="skills">Skills</a></li>
+      <li><a class="dropdown-item" href="#" data-section="languages">Languages</a></li>
+    </ul>
+  </div>
+</div>
 
 	<!-- Education Preview Tiles -->
+ <div id="section-education" class="d-none">
   <div class="card mb-4">
 	  <div class="card-header">Added Education</div>
 	  <div class="card-body">
       <div id="added-education-container" class="d-flex flex-column"></div>
   </div>
   </div>
+
 
 	<!-- Education Entry -->
   <div class="card mb-4">
@@ -111,8 +131,11 @@
 
   <!-- Hidden inputs for model binding of Education -->
   <div id="education-inputs"></div>
+</div>
+
 
   <!-- Work Experience Preview -->
+ <div id="section-work" class="d-none">
   <div class="card mb-4">
 	<div class="card-header">Added Experience</div>
 	<div class="card-body">
@@ -130,8 +153,11 @@
 
   <!-- Hidden inputs for model binding -->
   <div id="work-inputs"></div>
+</div>
+
 
 	<!-- Skills Preview Tiles -->
+<div id="section-skills" class="d-none">
   <div class="card mb-4">
 	<div class="card-header">Added Skills</div>
 	<div class="card-body">
@@ -151,7 +177,10 @@
   <!-- Hidden inputs for model binding -->
   <div id="skills-inputs"></div>
 
+</div>
+
         <!-- Languages Preview Tiles -->
+<div id="section-languages" class="d-none">
   <div class="card mb-4">
     <div class="card-header">Added Languages</div>
     <div class="card-body">
@@ -173,8 +202,12 @@
   <!-- Hidden inputs for model binding -->
   <div id="languages-inputs"></div>
 
+
+
   <!-- validation message if none added -->
   <span asp-validation-for="Languages" class="text-danger"></span>
+</div>
+
 
   <!-- SUBMIT BUTTON in a matching 2-column grid -->
   <div class="row mb-4">
@@ -378,10 +411,17 @@
                 minLength: 2,
                 delay: 200
             });
+
             $("#degree-autocomplete").autocomplete({
                 source: '@Url.Action("SearchDegrees", "Cv")',
                 minLength: 2,
                 delay: 200
+            });
+
+                $('#EntryLanguage_Name').autocomplete({
+              source: '@Url.Action("SearchLanguages", "Cv")',
+              minLength: 1,
+              delay: 200
             });
 
             // —— DATE RESTRICTIONS —— 
@@ -455,14 +495,19 @@
                     return this.name.indexOf('Languages['+idx+']')===0;
                 }).remove();
             });
+
+            $('.dropdown-item[data-section]').on('click', function(e) {
+              e.preventDefault();
+              var sec = $(this).data('section');           // "education" / "work" / ...
+              var $wrapper = $('#addSectionBtn').closest('.mb-4'); // button div
+              var $section = $('#section-' + sec)
+                                .removeClass('d-none')
+                                .insertBefore($wrapper);   // place section above button
+              $(this).addClass('disabled');                // dont allow to do it multiple times
+            });
         });
 
-        // autocomplete for language names
-        $('#EntryLanguage_Name').autocomplete({
-          source: '@Url.Action("SearchLanguages", "Cv")',
-          minLength: 1,
-          delay: 200
-        });
+        
 
             
 </script>
