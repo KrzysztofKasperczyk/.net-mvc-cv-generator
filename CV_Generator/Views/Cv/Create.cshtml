@@ -2,229 +2,196 @@
 @using Microsoft.AspNetCore.Mvc.ViewFeatures
 
 @{
-	ViewData["Title"] = "Create CV";
-	// prepare ViewData for the “entry” Skill partial
-	var vdEntry = new ViewDataDictionary(ViewData);
-	vdEntry.TemplateInfo.HtmlFieldPrefix = "EntrySkill";
-	var vdEntryWork = new ViewDataDictionary(ViewData);
-	vdEntryWork.TemplateInfo.HtmlFieldPrefix = "EntryWork";
-	var vdEntryEducation = new ViewDataDictionary(ViewData);
-	vdEntryEducation.TemplateInfo.HtmlFieldPrefix = "EntryEducation";
-	var vdEntryLang = new ViewDataDictionary(ViewData);
-	vdEntryLang.TemplateInfo.HtmlFieldPrefix = "EntryLanguage";
+    ViewData["Title"] = "Create CV";
+
+    // Prepare ViewData for the entry partials
+    var vdEntry = new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "EntrySkill" } };
+    var vdEntryWork = new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "EntryWork" } };
+    var vdEntryEducation = new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "EntryEducation" } };
+    var vdEntryLang = new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "EntryLanguage" } };
 }
 
 <h1>Create Your CV</h1>
+
 <form asp-action="Create" method="post" enctype="multipart/form-data">
-	<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
- <!-- Personal Information -->
- <div class="card mb-4 personal-item">
-  <div class="card-header">Personal Information</div>
-  <div class="card-body">
-	<div class="row">
-
-	  <!-- LEFT COLUMN: text fields, half‐width inputs -->
-	  <div class="col-12 col-md-6">
-		<div class="form-group">
-		  <label asp-for="Personal.FullName"></label>
-		  <input asp-for="Personal.FullName"
-				 class="form-control w-50"
-				 maxlength="100" />
-		  <span asp-validation-for="Personal.FullName" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-		  <label asp-for="Personal.Email"></label>
-		  <input asp-for="Personal.Email"
-				 class="form-control w-50"
-				 maxlength="100" />
-		  <span asp-validation-for="Personal.Email" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-		  <label asp-for="Personal.CountryCode"></label>
-		  <select asp-for="Personal.CountryCode"
-				  class="form-control w-auto"
-				  asp-items="ViewBag.CountryCodes"></select>
-		  <span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-		  <label asp-for="Personal.PhoneNumber"></label>
-		  <input asp-for="Personal.PhoneNumber"
-				 id="Personal_PhoneNumber"
-				 class="form-control w-auto"
-				 maxlength="11" />
-		  <span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
-		</div>
-	  </div>
-
-	  <!-- RIGHT COLUMN: photo picker + preview, left‐aligned -->
-	  <div class="col-12 col-md-6">
-		<div class="form-group">
-		  <label for="Photo" class="d-block">Photo</label>
-		  <input type="file"
-				 name="Photo"
-				 id="Photo"
-				 accept="image/*"
-				 class="form-control-file mt-1" />
-		</div>
-		<img id="photo-preview"
-			 src=""
-			 alt="Photo preview"
-			 class="cv-photo mt-2"
-			 style="display:none;" />
-	  </div>
-
-	</div>
-
-		<!-- Summary -->
-		<div class="form-group">
-		  <label asp-for="Personal.Summary"></label>
-		  <textarea asp-for="Personal.Summary"
-					class="form-control"
-					maxlength="500"
-					rows="4"
-					placeholder="Tell us something about yourself…"></textarea>
-		  <span asp-validation-for="Personal.Summary" class="text-danger"></span>
-		</div>
-
-  </div>
-</div>
-
-
-
-    @* Add Section dropdown *@
-<div class="mb-4">
-  <div class="dropdown">
-    <button class="btn btn-outline-primary dropdown-toggle" 
-            type="button" 
-            id="addSectionBtn" 
-            data-bs-toggle="dropdown" 
-            aria-expanded="false">
-      Add Section
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="addSectionBtn">
-      <li><a class="dropdown-item" href="#" data-section="education">Education</a></li>
-      <li><a class="dropdown-item" href="#" data-section="work">Work Experience</a></li>
-      <li><a class="dropdown-item" href="#" data-section="skills">Skills</a></li>
-      <li><a class="dropdown-item" href="#" data-section="languages">Languages</a></li>
-    </ul>
-  </div>
-</div>
-
-	<!-- Education Preview Tiles -->
- <div id="section-education" class="d-none">
-  <div class="card mb-4">
-	  <div class="card-header">Added Education</div>
-	  <div class="card-body">
-      <div id="added-education-container" class="d-flex flex-column"></div>
-  </div>
-  </div>
-
-
-	<!-- Education Entry -->
-  <div class="card mb-4">
-	<div class="card-header">New Education</div>
-	<div class="card-body">
-				@Html.Partial("_EducationItem", new CvGenerator.Models.EducationItem(), vdEntryEducation)
-	</div>
-  </div>
-
-  <!-- Hidden inputs for model binding of Education -->
-  <div id="education-inputs"></div>
-</div>
-
-
-  <!-- Work Experience Preview -->
- <div id="section-work" class="d-none">
-  <div class="card mb-4">
-	<div class="card-header">Added Experience</div>
-	<div class="card-body">
-	  <div id="added-work-container" class="d-flex flex-column"></div>
-	</div>
-  </div>
-
-   <!-- Work Experience Entry -->
-  <div class="card mb-4">
-	<div class="card-header">New Experience</div>
-	<div class="card-body">
-		@Html.Partial("_WorkItem", new CvGenerator.Models.WorkExperience(), vdEntryWork)
-	</div>
-  </div>
-
-  <!-- Hidden inputs for model binding -->
-  <div id="work-inputs"></div>
-</div>
-
-
-	<!-- Skills Preview Tiles -->
-<div id="section-skills" class="d-none">
-  <div class="card mb-4">
-	<div class="card-header">Added Skills</div>
-	<div class="card-body">
-	  <div id="added-skills-container" class="d-flex flex-wrap"></div>
-	</div>
-  </div>
-
-  <!-- Skill Entry -->
-  <div class="card mb-4">
-	<div class="card-header">New Skill</div>
-	<div class="card-body">
-			@* Render the same _SkillItem partial as the entry form *@
-			@Html.Partial("_SkillItem", new CvGenerator.Models.Skill(), vdEntry)
-	</div>
-  </div>
-
-  <!-- Hidden inputs for model binding -->
-  <div id="skills-inputs"></div>
-
-</div>
-
-        <!-- Languages Preview Tiles -->
-<div id="section-languages" class="d-none">
-  <div class="card mb-4">
-    <div class="card-header">Added Languages</div>
-    <div class="card-body">
-      <div id="added-languages-container" class="d-flex flex-wrap"></div>
+    <!-- Personal Information -->
+    <div class="card mb-4 personal-item">
+        <div class="card-header">Personal Information</div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Left Column: Text Fields -->
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Personal.FullName"></label>
+                        <input asp-for="Personal.FullName" class="form-control w-50" maxlength="100" />
+                        <span asp-validation-for="Personal.FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Personal.Email"></label>
+                        <input asp-for="Personal.Email" class="form-control w-50" maxlength="100" />
+                        <span asp-validation-for="Personal.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Personal.CountryCode"></label>
+                        <select asp-for="Personal.CountryCode" class="form-control w-auto" asp-items="ViewBag.CountryCodes"></select>
+                        <span asp-validation-for="Personal.CountryCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Personal.PhoneNumber"></label>
+                        <input asp-for="Personal.PhoneNumber" id="Personal_PhoneNumber" class="form-control w-auto" maxlength="11" />
+                        <span asp-validation-for="Personal.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- Right Column: Photo Picker + Preview -->
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="Photo" class="d-block">Photo</label>
+                        <input type="file" name="Photo" id="Photo" accept="image/*" class="form-control-file mt-1" />
+                    </div>
+                    <img id="photo-preview" src="" alt="Photo preview" class="cv-photo mt-2" style="display:none;" />
+                </div>
+            </div>
+            <!-- Summary -->
+            <div class="form-group">
+                <label asp-for="Personal.Summary"></label>
+                <textarea asp-for="Personal.Summary" class="form-control" maxlength="500" rows="4" placeholder="Tell us something about yourself…"></textarea>
+                <span asp-validation-for="Personal.Summary" class="text-danger"></span>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Language Entry -->
-  <div class="card mb-4">
-    <div class="card-header">New Language</div>
-    <div class="card-body">
-            @Html.Partial("_LanguageItem", new CvGenerator.Models.LanguageItem(), vdEntryLang)
-      <button type="button" id="add-language" class="btn btn-sm btn-outline-primary mt-2">
-        Add Language
-      </button>
+    <!-- Add Section Dropdown -->
+    <div class="mb-4">
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle"
+                    type="button"
+                    id="addSectionBtn"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                Add Section
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="addSectionBtn">
+                <li><a class="dropdown-item" href="#" data-section="education">Education</a></li>
+                <li><a class="dropdown-item" href="#" data-section="work">Work Experience</a></li>
+                <li><a class="dropdown-item" href="#" data-section="skills">Skills</a></li>
+                <li><a class="dropdown-item" href="#" data-section="languages">Languages</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
 
-  <!-- Hidden inputs for model binding -->
-  <div id="languages-inputs"></div>
+    <!-- Education Section (hidden by default) -->
+    <div id="section-education" class="d-none">
+        <div class="card mb-4">
+            <div class="card-header">Added Education</div>
+            <div class="card-body">
+                <div id="added-education-container" class="d-flex flex-column"></div>
+            </div>
+        </div>
 
-
-
-  <!-- validation message if none added -->
-  <span asp-validation-for="Languages" class="text-danger"></span>
-</div>
-
-
-  <!-- SUBMIT BUTTON in a matching 2-column grid -->
-  <div class="row mb-4">
-    <div class="col-12 col-md-6">
-      <button type="submit" class="btn btn-primary">Preview CV</button>
+        <div class="card mb-4">
+            <div class="card-header">New Education</div>
+            <div class="card-body">
+                @@await Html.PartialAsync(
+                    "_EducationItem",
+                    new CvGenerator.Models.EducationItem(),
+                    vdEntryEducation
+                )
+            </div>
+        </div>
+        <div id="education-inputs"></div>
     </div>
-  </div>
+
+    <!-- Work Experience Section -->
+    <div id="section-work" class="d-none">
+        <div class="card mb-4">
+            <div class="card-header">Added Experience</div>
+            <div class="card-body">
+                <div id="added-work-container" class="d-flex flex-column"></div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">New Experience</div>
+            <div class="card-body">
+                @await Html.PartialAsync(
+                    "_WorkItem",
+                    new CvGenerator.Models.WorkExperience(),
+                    vdEntryWork
+                )
+            </div>
+        </div>
+        <div id="work-inputs"></div>
+    </div>
+
+    <!-- Skills Section -->
+    <div id="section-skills" class="d-none">
+        <div class="card mb-4">
+            <div class="card-header">Added Skills</div>
+            <div class="card-body">
+                <div id="added-skills-container" class="d-flex flex-wrap"></div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">New Skill</div>
+            <div class="card-body">
+                @await Html.PartialAsync(
+                    "_SkillItem",
+                    new CvGenerator.Models.Skill(),
+                    vdEntry
+                )
+            </div>
+        </div>
+        <div id="skills-inputs"></div>
+    </div>
+
+    <!-- Languages Section -->
+    <div id="section-languages" class="d-none">
+        <div class="card mb-4">
+            <div class="card-header">Added Languages</div>
+            <div class="card-body">
+                <div id="added-languages-container" class="d-flex flex-wrap"></div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">New Language</div>
+            <div class="card-body">
+                @await Html.PartialAsync(
+                    "_LanguageItem",
+                    new CvGenerator.Models.LanguageItem(),
+                    vdEntryLang
+                )
+                <button type="button" id="add-language" class="btn btn-sm btn-outline-primary mt-2">
+                    Add Language
+                </button>
+            </div>
+        </div>
+        <div id="languages-inputs"></div>
+        <span asp-validation-for="Languages" class="text-danger"></span>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="row mb-4">
+        <div class="col-12 col-md-6">
+            <button type="submit" class="btn btn-primary">Preview CV</button>
+        </div>
+    </div>
 </form>
 
-
-@* Hidden template for new skill rows *@
+<!-- Hidden template for Skill clones -->
 <div id="skill-template" style="display:none;">
-	@{
-		var vd2 = new ViewDataDictionary(ViewData);
-		vd2.TemplateInfo.HtmlFieldPrefix = "Skills[__index__]";
-		Html.RenderPartial("_SkillItem", new CvGenerator.Models.Skill(), vd2);
-	}
+    <script type="text/html" id="skill-template">
+      <partial
+        name="_SkillItem"
+        model="new CvGenerator.Models.Skill()"
+        view-data="@(new ViewDataDictionary(ViewData) {
+          TemplateInfo = { HtmlFieldPrefix = "Skills[__index__]" }
+        })" />
+</script>
+
 </div>
 
 @section Scripts {
@@ -233,220 +200,24 @@
     }
         <script>
         $(function() {
-            // helper: format YYYY-MM to MM-YYYY
-            function formatYM(d) {
-                var parts = d.split('-');
+            // ── Helper ──────────────────────────────────────────────────────────
+            function formatYM(dateString) {
+                var parts = dateString.split('-');
                 return parts[1] + '-' + parts[0];
             }
 
-            // Counters for dynamic lists
-            var skillIndex     = 0;
-            var workIndex      = 0;
-            var educationIndex = 0;
-            var langIndex      = @Model.Languages.Count;
+            // ── Counters ────────────────────────────────────────────────────────
+            var educationIndex = 0,
+                workIndex      = 0,
+                skillIndex     = 0,
+                langIndex      = @Model.Languages.Count;
 
-            // —— EDUCATION —— 
-            $('#add-education').on('click', function(){
-                var inst  = $('[name="EntryEducation.Institution"]').val();
-                var deg   = $('[name="EntryEducation.Degree"]').val();
-                var start = $('[name="EntryEducation.StartDate"]').val();
-                var end   = $('[name="EntryEducation.EndDate"]').val();
-                var ong   = $('[name="EntryEducation.IsOngoing"]').is(':checked');
-                var desc  = $('[name="EntryEducation.Description"]').val();
-
-                if (!inst || !deg) {
-                    alert('Please enter both Institution and Degree.');
-                    return;
-                }
-
-                var dates = start ? formatYM(start) : '';
-                if (ong)       dates += ' – Present';
-                else if (end)  dates += ' – ' + formatYM(end);
-
-                var tileHtml =
-                  '<div class="education-tile mb-2 p-2 border rounded" data-index="' + educationIndex + '">' +
-                    '<strong>' + inst + '</strong> ' + deg + '<br>' +
-                    '<small>' + dates + '</small>' +
-                    (desc
-                      ? '<br><small class="education-desc">' +
-                        desc.replace(/</g,'&lt;').replace(/>/g,'&gt;') +
-                        '</small>'
-                      : ''
-                    ) +
-                  '</div>';
-
-                $('#added-education-container').append(tileHtml);
-
-                var base = 'Education[' + educationIndex + ']';
-                $('<input>').attr({ type:'hidden', name: base + '.Institution', value: inst }).appendTo('#education-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.Degree',      value: deg }).appendTo('#education-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.StartDate',   value: start }).appendTo('#education-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.EndDate',     value: end }).appendTo('#education-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.IsOngoing',   value: ong }).appendTo('#education-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.Description', value: desc }).appendTo('#education-inputs');
-
-                educationIndex++;
-                $('[name="EntryEducation.Institution"]').val('');
-                $('[name="EntryEducation.Degree"]').val('');
-                $('[name="EntryEducation.StartDate"]').val('');
-                $('[name="EntryEducation.EndDate"]').val('');
-                $('[name="EntryEducation.IsOngoing"]').prop('checked', false);
-                $('[name="EntryEducation.Description"]').val('');
-            });
-
-            $(document).on('click', '.education-tile', function(){
-                var idx = $(this).data('index');
-                $(this).remove();
-                $('#education-inputs input').filter(function(){
-                    return this.name.indexOf('Education[' + idx + ']') === 0;
-                }).remove();
-            });
-
-            // —— SKILLS —— 
-            $('#add-skill').on('click', function(){
-                var name  = $('[name="EntrySkill.Name"]').val();
-                var level = $('[name="EntrySkill.Level"]').val();
-                var desc  = $('[name="EntrySkill.Description"]').val();
-
-                if (!name) {
-                    alert('Please enter skill name.');
-                    return;
-                }
-
-                var $tile = $(
-                  '<div class="badge badge-light text-dark m-1 p-2" data-index="'+skillIndex+'">'+
-                    name + ' <br> (Lvl ' + level + '/100)' +
-                    (desc ? '<div><small>'+ desc +'</small></div>' : '') +
-                  '</div>'
-                );
-                $('#added-skills-container').append($tile);
-
-                $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Name', value:name}).appendTo('#skills-inputs');
-                $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Level', value:level}).appendTo('#skills-inputs');
-                $('<input>').attr({type:'hidden', name:'Skills['+skillIndex+'].Description', value:desc}).appendTo('#skills-inputs');
-
-                skillIndex++;
-                $('[name="EntrySkill.Name"]').val('');
-                $('[name="EntrySkill.Level"]').val('1');
-                $('[name="EntrySkill.Description"]').val('');
-            });
-
-            $(document).on('click', '#added-skills-container .badge', function(){
-                var idx = $(this).data('index');
-                $(this).remove();
-                $('#skills-inputs input').filter(function(){
-                    return this.name.indexOf('Skills['+idx+']') === 0;
-                }).remove();
-            });
-
-            // —— WORK EXPERIENCE —— 
-            $('#add-work').on('click', function() {
-                var prefix    = 'EntryWork';
-                var company   = $('[name="'+prefix+'.Company"]').val();
-                var position  = $('[name="'+prefix+'.Position"]').val();
-                var startDate = $('[name="'+prefix+'.StartDate"]').val();
-                var endDate   = $('[name="'+prefix+'.EndDate"]').val();
-                var isOng     = $('[name="'+prefix+'.IsOngoing"]').is(':checked');
-                var resp      = $('[name="'+prefix+'.Responsibilities"]').val();
-
-                if (!company || !position) {
-                    alert('Please enter both Company and Position.');
-                    return;
-                }
-
-                var idx   = workIndex;
-                var dates = startDate||'';
-                if (isOng)       dates += ' – Present';
-                else if (endDate) dates += ' – ' + endDate;
-
-                var tileHtml =
-                  '<div class="work-tile mb-2" data-index="' + idx + '">' +
-                    '<div class="work-content">' +
-                      '<strong>' + company + '</strong> – ' + position + '<br>' +
-                      '<small>' + dates + '</small>' +
-                      (resp
-                        ? '<br><small class="responsibilities">'+ resp.replace(/</g,'&lt;').replace(/>/g,'&gt;') +'</small>'
-                        : ''
-                      ) +
-                    '</div>' +
-                  '</div>';
-
-                $('#added-work-container').append(tileHtml);
-
-                var base = 'Experience['+idx+']';
-                $('<input>').attr({type:'hidden', name: base+'.Company', value:company}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.Position', value:position}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.StartDate', value:startDate}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.EndDate', value:endDate}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.IsOngoing', value:isOng}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.Responsibilities', value:resp}).appendTo('#work-inputs');
-
-                workIndex++;
-                $('[name="'+prefix+'.Company"]').val('');
-                $('[name="'+prefix+'.Position"]').val('');
-                $('[name="'+prefix+'.StartDate"]').val('');
-                $('[name="'+prefix+'.EndDate"]').val('');
-                $('[name="'+prefix+'.IsOngoing"]').prop('checked', false);
-                $('[name="'+prefix+'.Responsibilities"]').val('');
-            });
-
-            $(document).on('click', '.work-tile', function() {
-                var idx = $(this).data('index');
-                $(this).remove();
-                $('#work-inputs input').filter(function() {
-                    return this.name.startsWith('Experience[' + idx + ']');
-                }).remove();
-            });
-
-            // —— PHONE MASK —— 
+            // ── Personal Information ───────────────────────────────────────────
             $('#Personal_PhoneNumber').on('input', function() {
-                var val = this.value.replace(/\D/g, '').substring(0,9);
-                var parts = val.match(/.{1,3}/g) || [];
+                var val   = this.value.replace(/\D/g, '').substring(0,9),
+                    parts = val.match(/.{1,3}/g) || [];
                 this.value = parts.join('-');
             });
-
-            // —— AUTOCOMPLETE —— 
-            $('#institution-autocomplete').autocomplete({
-                source: '@Url.Action("SearchInstitutions", "Cv")',
-                minLength: 2,
-                delay: 200
-            });
-
-            $("#degree-autocomplete").autocomplete({
-                source: '@Url.Action("SearchDegrees", "Cv")',
-                minLength: 2,
-                delay: 200
-            });
-
-                $('#EntryLanguage_Name').autocomplete({
-              source: '@Url.Action("SearchLanguages", "Cv")',
-              minLength: 1,
-              delay: 200
-            });
-
-            // —— DATE RESTRICTIONS —— 
-            var today = new Date().toISOString().split('T')[0];
-            $('input[type="date"][id$="StartDate"]')
-              .attr('max', today)
-              .on('change', function(){
-                if (this.value > today) this.value = today;
-            });
-            $('input[type="date"]').on('change', function(){
-                var name = $(this).attr('name');
-                if (name.endsWith('.StartDate')) {
-                    var endName = name.replace('.StartDate', '.EndDate');
-                    var $end = $('input[name="'+endName+'"]');
-                    $end.attr('min', this.value);
-                    if ($end.val() && $end.val() < this.value) $end.val(this.value);
-                }
-                if (name.endsWith('.EndDate')) {
-                    var startName = name.replace('.EndDate', '.StartDate');
-                    var startVal = $('input[name="'+startName+'"]').val();
-                    if (startVal && this.value < startVal) this.value = startVal;
-                }
-            });
-
-            // —— PHOTO PREVIEW —— 
             $('#Photo').on('change', function(evt) {
                 var file = evt.target.files[0];
                 if (!file || !file.type.startsWith('image/')) {
@@ -460,68 +231,210 @@
                 reader.readAsDataURL(file);
             });
 
-            // —— LANGUAGES —— 
-            $('#add-language').click(function(){
-                var prefix = 'EntryLanguage';
-                var name  = $('[name="'+prefix+'.Name"]').val();
-                var level = $('[name="'+prefix+'.Level"]').val();
+            // ── Autocomplete ────────────────────────────────────────────────────
+            $('#institution-autocomplete').autocomplete({ source: '@Url.Action("SearchInstitutions", "Cv")', minLength: 2 });
+            $('#degree-autocomplete').autocomplete({ source: '@Url.Action("SearchDegrees", "Cv")',       minLength: 2 });
+            $('#EntryLanguage_Name').autocomplete({ source: '@Url.Action("SearchLanguages", "Cv")',      minLength: 1 });
 
-                if (!name) {
-                    alert('Please enter a language name.');
-                    return;
+            // ── Date Restrictions ───────────────────────────────────────────────
+            var today = new Date().toISOString().split('T')[0];
+            $('input[type="date"][id$="StartDate"]')
+                .attr('max', today)
+                .on('change', function() { if (this.value > today) this.value = today; });
+            $('input[type="date"]').on('change', function() {
+                var name = $(this).attr('name');
+                if (name.endsWith('.StartDate')) {
+                    var endName = name.replace('.StartDate', '.EndDate'),
+                        $end    = $('input[name="' + endName + '"]');
+                    $end.attr('min', this.value);
+                    if ($end.val() && $end.val() < this.value) $end.val(this.value);
                 }
-
-                var $tile = $(
-                  '<div class="language-tile badge badge-light text-dark m-1 p-2" data-index="'+langIndex+'">'+
-                    name + ' <br> ' + level +
-                  '</div>'
-                );
-                $('#added-languages-container').append($tile);
-
-                var base = 'Languages['+langIndex+']';
-                $('<input>').attr({ type:'hidden', name: base + '.Name',  value: name  }).appendTo('#languages-inputs');
-                $('<input>').attr({ type:'hidden', name: base + '.Level', value: level }).appendTo('#languages-inputs');
-
-                langIndex++;
-                $('[name="'+prefix+'.Name"]').val('');
-                $('[name="'+prefix+'.Level"]').val('A1');
+                if (name.endsWith('.EndDate')) {
+                    var startName = name.replace('.EndDate', '.StartDate'),
+                        startVal  = $('input[name="' + startName + '"]').val();
+                    if (startVal && this.value < startVal) this.value = startVal;
+                }
             });
 
-            $(document).on('click', '.language-tile, .remove-language', function(){
-                var $el = $(this).hasClass('language-tile') ? $(this) : $(this).closest('.language-item');
-                var idx = $el.data('index');
-                $('[data-index="'+idx+'"]').remove();
-                $('#languages-inputs input').filter(function(){
-                    return this.name.indexOf('Languages['+idx+']')===0;
+            // ── Education ───────────────────────────────────────────────────────
+            $('#add-education').on('click', function() {
+                var inst  = $('[name="EntryEducation.Institution"]').val(),
+                    deg   = $('[name="EntryEducation.Degree"]').val(),
+                    start = $('[name="EntryEducation.StartDate"]').val(),
+                    end   = $('[name="EntryEducation.EndDate"]').val(),
+                    ong   = $('[name="EntryEducation.IsOngoing"]').is(':checked'),
+                    desc  = $('[name="EntryEducation.Description"]').val();
+                if (!inst || !deg) { alert('Please enter both Institution and Degree.'); return; }
+                var dates = start ? formatYM(start) : '';
+                if (ong)       dates += ' – Present';
+                else if (end)  dates += ' – ' + formatYM(end);
+                var tileHtml =
+                    '<div class="education-tile mb-2 p-2 border rounded" data-index="' + educationIndex + '">' +
+                        '<strong>' + inst + '</strong> ' + deg + '<br>' +
+                        '<small>' + dates + '</small>' +
+                        (desc
+                            ? '<br><small class="education-desc">' +
+                              desc.replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+                              '</small>'
+                            : ''
+                        ) +
+                    '</div>';
+                $('#added-education-container').append(tileHtml);
+                var base = 'Education[' + educationIndex + ']';
+                $('<input>').attr({type:'hidden', name: base + '.Institution', value: inst }).appendTo('#education-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.Degree',      value: deg }).appendTo('#education-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.StartDate',   value: start }).appendTo('#education-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.EndDate',     value: end }).appendTo('#education-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.IsOngoing',   value: ong }).appendTo('#education-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.Description', value: desc }).appendTo('#education-inputs');
+                educationIndex++;
+                $('[name="EntryEducation.Institution"]').val('');
+                $('[name="EntryEducation.Degree"]').val('');
+                $('[name="EntryEducation.StartDate"]').val('');
+                $('[name="EntryEducation.EndDate"]').val('');
+                $('[name="EntryEducation.IsOngoing"]').prop('checked', false);
+                $('[name="EntryEducation.Description"]').val('');
+            });
+            $(document).on('click', '.education-tile', function() {
+                var idx = $(this).data('index');
+                $(this).remove();
+                $('#education-inputs input').filter(function() {
+                    return this.name.indexOf('Education[' + idx + ']') === 0;
                 }).remove();
             });
 
+            // ── Work Experience ─────────────────────────────────────────────────
+            $('#add-work').on('click', function() {
+                var prefix    = 'EntryWork',
+                    comp      = $('[name="' + prefix + '.Company"]').val(),
+                    pos       = $('[name="' + prefix + '.Position"]').val(),
+                    startDate = $('[name="' + prefix + '.StartDate"]').val(),
+                    endDate   = $('[name="' + prefix + '.EndDate"]').val(),
+                    isOng     = $('[name="' + prefix + '.IsOngoing"]').is(':checked'),
+                    resp      = $('[name="' + prefix + '.Responsibilities"]').val();
+                if (!comp || !pos) { alert('Please enter both Company and Position.'); return; }
+                var dates = startDate || '';
+                if (isOng)       dates += ' – Present';
+                else if (endDate) dates += ' – ' + endDate;
+                var tileHtml =
+                    '<div class="work-tile mb-2" data-index="' + workIndex + '">' +
+                        '<div class="work-content">' +
+                            '<strong>' + comp + '</strong> – ' + pos + '<br>' +
+                            '<small>' + dates + '</small>' +
+                            (resp
+                                ? '<br><small class="responsibilities">' +
+                                  resp.replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+                                  '</small>'
+                                : ''
+                            ) +
+                        '</div>' +
+                    '</div>';
+                $('#added-work-container').append(tileHtml);
+                var base = 'Experience[' + workIndex + ']';
+                $('<input>').attr({type:'hidden', name: base + '.Company',         value: comp}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.Position',        value: pos }).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.StartDate',       value: startDate}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.EndDate',         value: endDate}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.IsOngoing',       value: isOng}).appendTo('#work-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.Responsibilities',value: resp }).appendTo('#work-inputs');
+                workIndex++;
+                $('[name="' + prefix + '.Company"]').val('');
+                $('[name="' + prefix + '.Position"]').val('');
+                $('[name="' + prefix + '.StartDate"]').val('');
+                $('[name="' + prefix + '.EndDate"]').val('');
+                $('[name":"' + prefix + '.IsOngoing"]').prop('checked', false);
+                $('[name":"' + prefix + '.Responsibilities"]').val('');
+            });
+            $(document).on('click', '.work-tile', function() {
+                var idx = $(this).data('index');
+                $(this).remove();
+                $('#work-inputs input').filter(function() {
+                    return this.name.startsWith('Experience[' + idx + ']');
+                }).remove();
+            });
+
+            // ── Skills ───────────────────────────────────────────────────────────
+            $('#add-skill').on('click', function() {
+                var name  = $('[name="EntrySkill.Name"]').val(),
+                    lvl   = $('[name="EntrySkill.Level"]').val(),
+                    desc  = $('[name="EntrySkill.Description"]').val();
+                if (!name) { alert('Please enter skill name.'); return; }
+                var $tile = $(
+                    '<div class="badge badge-light text-dark m-1 p-2" data-index="' + skillIndex + '">' +
+                        name + ' <br>(Lvl ' + lvl + '/100)' +
+                        (desc ? '<div><small>' + desc + '</small></div>' : '') +
+                    '</div>'
+                );
+                $('#added-skills-container').append($tile);
+                $('<input>').attr({type:'hidden', name:'Skills[' + skillIndex + '].Name',       value: name}).appendTo('#skills-inputs');
+                $('<input>').attr({type:'hidden', name:'Skills[' + skillIndex + '].Level',      value: lvl }).appendTo('#skills-inputs');
+                $('<input>').attr({type:'hidden', name:'Skills[' + skillIndex + '].Description',value: desc}).appendTo('#skills-inputs');
+                skillIndex++;
+                $('[name="EntrySkill.Name"]').val('');
+                $('[name="EntrySkill.Level"]').val('1');
+                $('[name="EntrySkill.Description"]').val('');
+            });
+            $(document).on('click','#added-skills-container .badge',function(){
+                var idx = $(this).data('index');
+                $(this).remove();
+                $('#skills-inputs input').filter(function(){
+                    return this.name.indexOf('Skills[' + idx + ']') === 0;
+                }).remove();
+            });
+
+            // ── Languages ────────────────────────────────────────────────────────
+            $('#add-language').on('click', function() {
+                var prefix = 'EntryLanguage',
+                    name   = $('[name="' + prefix + '.Name"]').val(),
+                    lvl    = $('[name="' + prefix + '.Level"]').val();
+                if (!name) { alert('Please enter a language name.'); return; }
+                var $tile = $(
+                    '<div class="language-tile badge badge-light text-dark m-1 p-2" data-index="' + langIndex + '">' +
+                        name + ' <br>' + lvl +
+                    '</div>'
+                );
+                $('#added-languages-container').append($tile);
+                var base = 'Languages[' + langIndex + ']';
+                $('<input>').attr({type:'hidden', name: base + '.Name',  value: name}).appendTo('#languages-inputs');
+                $('<input>').attr({type:'hidden', name: base + '.Level', value: lvl }).appendTo('#languages-inputs');
+                langIndex++;
+                $('[name="' + prefix + '.Name"]').val('');
+                $('[name="' + prefix + '.Level"]').val('A1');
+            });
+            $(document).on('click', '.language-tile, .remove-language', function() {
+                var $el = $(this).hasClass('language-tile')
+                            ? $(this)
+                            : $(this).closest('.language-item'),
+                    idx = $el.data('index');
+                $('[data-index="' + idx + '"]').remove();
+                $('#languages-inputs input').filter(function() {
+                    return this.name.indexOf('Languages[' + idx + ']') === 0;
+                }).remove();
+            });
+
+            // ── Section Toggle (“Add Section”) ─────────────────────────────────
             $('.dropdown-item[data-section]').on('click', function(e) {
-              e.preventDefault();
-              var sec = $(this).data('section');           // "education" / "work" / ...
-              var $wrapper = $('#addSectionBtn').closest('.mb-4'); // button div
-              var $section = $('#section-' + sec)
-                                .removeClass('d-none')
-                                .insertBefore($wrapper);   // place section above button
-              $(this).addClass('disabled');                // dont allow to do it multiple times
+                e.preventDefault();
+                var sec      = $(this).data('section'),
+                    $wrapper = $('#addSectionBtn').closest('.mb-4');
+                $('#section-' + sec)
+                    .removeClass('d-none')
+                    .insertBefore($wrapper);
+                $(this).addClass('disabled');
             });
         });
-
-        
-
-            
-</script>
+        </script>
 
         <!-- hidden template for clones -->
-        <script type="text/html" id="language-template">
-        @Html.Raw(
-                     Html.Partial("_LanguageItem",
-                         new CvGenerator.Models.LanguageItem(),
-                         new ViewDataDictionary(ViewData)
-                {
-                    TemplateInfo = { HtmlFieldPrefix = "Languages[__index__]" }
-                }
-                     ).ToString()
+            <script type="text/html" id="language-template">
+                @await Html.PartialAsync(
+                     "_LanguageItem",
+                     new CvGenerator.Models.LanguageItem(),
+                     new ViewDataDictionary(ViewData)
+                    {
+                        TemplateInfo = { HtmlFieldPrefix = "Languages[__index__]" }
+                    }
                  )
-        </script>
+            </script>
+
 }
