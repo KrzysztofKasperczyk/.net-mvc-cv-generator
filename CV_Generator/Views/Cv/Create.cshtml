@@ -77,6 +77,7 @@
                 <li><a class="dropdown-item" href="#" data-section="work">Work Experience</a></li>
                 <li><a class="dropdown-item" href="#" data-section="skills">Skills</a></li>
                 <li><a class="dropdown-item" href="#" data-section="languages">Languages</a></li>
+                <li><a class="dropdown-item" href="#" data-section="custom">Custom</a></li>
             </ul>
         </div>
     </div>
@@ -173,6 +174,60 @@
         <span asp-validation-for="Languages" class="text-danger"></span>
     </div>
 
+   
+<div id="section-custom" class="d-none">
+  <div class="card mb-4">
+    <div class="card-header">Custom Section</div>
+    <div class="card-body">
+
+      <!-- Section title -->
+      <div class="form-group">
+        <label asp-for="Custom.Title">Section Title</label>
+        <input asp-for="Custom.Title" class="form-control" maxlength="100"/>
+      </div>
+
+      <!-- Builder: choose a type, label, max‐length -->
+      <div class="form-row align-items-end">
+        <div class="col-md-3">
+          <label>Field Type</label>
+          <select id="new-field-type" class="form-control">
+            <option value="Text">Text</option>
+            <option value="TextArea">TextArea</option>
+            <option value="Number">Number</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label>Label</label>
+          <input id="new-field-label" type="text" class="form-control" />
+        </div>
+        <div class="col-md-3">
+          <label>Max Length</label>
+          <input id="new-field-maxlength" type="number" class="form-control" min="1"/>
+        </div>
+        <div class="col-md-2">
+          <button id="add-custom-field" type="button" class="btn btn-outline-primary btn-block">
+            Add Field
+          </button>
+        </div>
+      </div>
+
+      <!-- show the list of definitions they made -->
+      <ul id="custom-field-list" class="list-group mt-3"></ul>
+
+      <!-- then the “live” form inputs -->
+      <div id="custom-form-fields" class="mt-4"></div>
+
+      <!-- hidden inputs so MVC can bind back Fields[] and Values -->
+      <input type="hidden" name="Custom.FieldsJson"   id="Custom_FieldsJson" />
+      <input type="hidden" name="Custom.ValuesJson"   id="Custom_ValuesJson" />
+
+    </div>
+  </div>
+</div>
+
+
+
     <!-- Submit Button -->
     <div class="row mb-4">
         <div class="col-12 col-md-6">
@@ -211,6 +266,96 @@
                 workIndex      = 0,
                 skillIndex     = 0,
                 langIndex      = @Model.Languages.Count;
+
+			// ── Custom Section ──────────────────────────────────────────────────
+            let fieldDefs = [];     // will hold CustomFieldDefinition[]
+            let fieldValues = {};   // { id: value, … }
+
+                function renderBuilderList(){
+        $('#custom-field-list').empty();
+        fieldDefs.forEach(f=>{
+          $('#custom-field-list').append(
+            `<li class="list-group-item d-flex justify-content-between">
+               <strong>${f.Label}</strong> (${f.Type}${f.MaxLength?`; max ${f.MaxLength}`:""})
+               <button class="btn btn-sm btn-danger remove-field" data-id="${f.Id}">×</button>
+             </li>`);
+        });
+        // push definitions JSON into hidden for postback
+        $('#Custom_FieldsJson').val(JSON.stringify(fieldDefs));
+      }
+
+      function renderFormFields(){
+        const $container = $('#custom-form-fields').empty();
+        fieldDefs.forEach(f=>{
+          let $row = $('<div class="form-group"></div>');
+          $row.append(`<label for="${f.Id}">${f.Label}</label>`);
+          let $inp;
+          switch(f.Type){
+            case 'TextArea':
+              $inp = $(`<textarea id="${f.Id}" name="Custom.Values['+f.Id+']" class="form-control"></textarea>`);
+              break;
+            case 'Number':
+              $inp = $(`<input type="number" id="${f.Id}" name="Custom.Values['+f.Id+']" class="form-control" />`);
+              break;
+            case 'Date':
+              $inp = $(`<input type="date" id="${f.Id}" name="Custom.Values['+f.Id+']" class="form-control" />`);
+              break;
+            default:
+              $inp = $(`<input type="text" id="${f.Id}" name="Custom.Values['+f.Id+']" class="form-control" />`);
+          }
+          if(f.MaxLength) $inp.attr('maxlength', f.MaxLength);
+          // restore any existing value
+          if(fieldValues[f.Id]) $inp.val(fieldValues[f.Id]);
+          $row.append($inp);
+          $container.append($row);
+        });
+        // dump current values for postback
+        $('#Custom_ValuesJson').val(JSON.stringify(fieldValues));
+      }
+
+      // Add a new field definition
+      $('#add-custom-field').click(function(){
+        const type      = $('#new-field-type').val();
+        const label     = $('#new-field-label').val().trim();
+        const maxLenRaw = $('#new-field-maxlength').val();
+        if(!label){ alert('You must enter a label'); return; }
+        const id = 'field-'+fieldDefs.length+'-'+Date.now();
+        fieldDefs.push({
+          Id:          id,
+          Label:       label,
+          Type:        type,
+          MaxLength:   maxLenRaw ? parseInt(maxLenRaw) : null
+        });
+        renderBuilderList();
+        renderFormFields();
+        // clear builder inputs
+        $('#new-field-label').val('');
+        $('#new-field-maxlength').val('');
+      });
+
+      // Remove a field definition
+      $(document).on('click','.remove-field',function(){
+        const id = $(this).data('id');
+        fieldDefs = fieldDefs.filter(f=>f.Id!==id);
+        delete fieldValues[id];
+        renderBuilderList();
+        renderFormFields();
+      });
+
+      // Track changes to the dynamic inputs
+      $('#custom-form-fields').on('input change','[name^="Custom.Values"]',function(){
+        const id = $(this).attr('id');
+        fieldValues[id] = $(this).val();
+        $('#Custom_ValuesJson').val(JSON.stringify(fieldValues));
+      });
+
+      // When user clicks “Add Section → Custom”
+      $('.dropdown-item[data-section="custom"]').click(function(e){
+        e.preventDefault();
+        $('#section-custom').removeClass('d-none')
+                            .insertBefore($(this).closest('.mb-4'));
+        $(this).addClass('disabled');
+      });
 
             // ── Personal Information ───────────────────────────────────────────
             $('#Personal_PhoneNumber').on('input', function() {
@@ -421,6 +566,21 @@
                     .removeClass('d-none')
                     .insertBefore($wrapper);
                 $(this).addClass('disabled');
+            });
+
+
+            $('.dropdown-item[data-section]').on('click', function(e){
+              e.preventDefault();
+              var sec = $(this).data('section');
+              var $wrapper = $('#addSectionBtn').closest('.mb-4');
+              var $section = $('#section-' + sec);
+
+              // reveal and move it above the “Add Section” button
+              $section.removeClass('d-none')
+                      .insertBefore($wrapper);
+
+              // disable so you can’t re-add
+              $(this).addClass('disabled');
             });
         });
         </script>
