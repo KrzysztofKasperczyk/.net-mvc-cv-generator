@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,6 +32,37 @@ namespace CvGenerator.Models
                 );
             }
         }
+
+        public CustomSection? Custom { get; set; }
+    }
+
+    public class CustomSection
+    {
+        [StringLength(100)]
+        public string? Title { get; set; }
+
+        // one definition per field they create
+        public List<CustomFieldDefinition> Fields { get; set; } = new();
+
+        // the values they type, keyed by the field’s unique name
+        public Dictionary<string, string?> Values { get; set; } = new();
+
+    }
+
+    public class CustomFieldDefinition
+    {
+        public string Id { get; set; }  // e.g. “field-0”, “field-1”
+        public string Label { get; set; }  // what shows on the form
+        public FieldType Type { get; set; }  // enum: Text, TextArea, Number, Date, etc.
+        public int? MaxLength { get; set; }  // if it’s a text field
+                                             
+    }
+    public enum FieldType
+    {
+        Text,
+        TextArea,
+        Number,
+        Date
     }
 
     public class PersonalInfo
