@@ -1,0 +1,55 @@
+﻿@* Views/Cv/_CustomSection.cshtml *@
+@model CvGenerator.Models.CustomSection
+
+@* Expect ViewData.TemplateInfo.HtmlFieldPrefix = "Custom" or "EntryCustom" *@
+
+  <div class="card mb-4">
+    <div class="card-header">Custom Section: @Model.Title</div>
+    <div class="card-body">
+
+      <!-- 1) Section title -->
+      <div class="form-group">
+        <label asp-for="Title">Section Title</label>
+        <input asp-for="Title" class="form-control" maxlength="100" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+      </div>
+
+      <!-- 2) Field-builder UI -->
+      <div class="form-row align-items-end mb-3">
+        <div class="col-md-3">
+          <label>Field Type</label>
+          <select id="new-field-type" class="form-control">
+            <option value="Text">Text</option>
+            <option value="TextArea">TextArea</option>
+            <option value="Number">Number</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label>Label</label>
+          <input id="new-field-label" type="text" class="form-control" />
+        </div>
+        <div class="col-md-3">
+          <label>Max Length</label>
+          <input id="new-field-maxlength" type="number" min="1" class="form-control" />
+        </div>
+        <div class="col-md-2">
+          <button id="add-custom-field" type="button" class="btn btn-outline-primary btn-block">
+            Add Field
+          </button>
+        </div>
+      </div>
+
+      <!-- 3) List of definitions -->
+      <ul id="custom-field-list" class="list-group mb-3"></ul>
+
+      <!-- 4) Live form inputs -->
+      <div id="custom-form-fields"></div>
+
+      <!-- 5) Hidden JSON binders -->
+      <input type="hidden" name="Custom.FieldsJson" id="Custom_FieldsJson" />
+      <input type="hidden" name="Custom.ValuesJson" id="Custom_ValuesJson" />
+
+    </div>
+  </div>
+
