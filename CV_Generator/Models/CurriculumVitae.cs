@@ -33,7 +33,7 @@ namespace CvGenerator.Models
             }
         }
 
-        public CustomSection? Custom { get; set; }
+        public List<CustomSection> CustomSections { get; set; } = new List<CustomSection>();
     }
 
     public class CustomSection

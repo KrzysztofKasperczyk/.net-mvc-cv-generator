@@ -56,8 +56,7 @@
       </div>
       <div class="form-group">
         <label asp-for="Personal.Summary"></label>
-        <textarea asp-for="Personal.Summary" class="form-control" maxlength="500" rows="4"
-                  placeholder="Tell us something about yourself…"></textarea>
+        <textarea asp-for="Personal.Summary" class="form-control" maxlength="500" rows="4" placeholder="Tell us something about yourself…"></textarea>
         <span asp-validation-for="Personal.Summary" class="text-danger"></span>
       </div>
     </div>
@@ -91,7 +90,6 @@
         <div id="added-education-container" class="d-flex flex-column"></div>
       </div>
     </div>
-
     <div class="card mb-4">
       <div class="card-header">New Education</div>
       <div class="card-body">
@@ -100,7 +98,6 @@
                  view-data="vdEntryEducation" />
       </div>
     </div>
-
     <div id="education-inputs"></div>
   </div>
 
@@ -112,7 +109,6 @@
         <div id="added-work-container" class="d-flex flex-column"></div>
       </div>
     </div>
-
     <div class="card mb-4">
       <div class="card-header">New Experience</div>
       <div class="card-body">
@@ -121,7 +117,6 @@
                  view-data="vdEntryWork" />
       </div>
     </div>
-
     <div id="work-inputs"></div>
   </div>
 
@@ -133,7 +128,6 @@
         <div id="added-skills-container" class="d-flex flex-wrap"></div>
       </div>
     </div>
-
     <div class="card mb-4">
       <div class="card-header">New Skill</div>
       <div class="card-body">
@@ -142,7 +136,6 @@
                  view-data="vdEntry" />
       </div>
     </div>
-
     <div id="skills-inputs"></div>
   </div>
 
@@ -154,7 +147,6 @@
         <div id="added-languages-container" class="d-flex flex-wrap"></div>
       </div>
     </div>
-
     <div class="card mb-4">
       <div class="card-header">New Language</div>
       <div class="card-body">
@@ -166,7 +158,6 @@
         </button>
       </div>
     </div>
-
     <div id="languages-inputs"></div>
     <span asp-validation-for="Languages" class="text-danger"></span>
   </div>
@@ -188,325 +179,268 @@
 
 <!-- Hidden template for Skill clones -->
 <div id="skill-template" style="display:none;">
-  <partial
-    name="_SkillItem"
-    model="new CvGenerator.Models.Skill()"
-    view-data="@(new ViewDataDictionary(ViewData) {
-      TemplateInfo = { HtmlFieldPrefix = "Skills[__index__]" }
-    })" />
+  <script type="text/html">
+    <partial
+      name="_SkillItem"
+      model="new CvGenerator.Models.Skill()"
+      view-data="@(new ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "Skills[__index__]" } })" />
+  </script>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-        <script>
-        $(function() {
-            // ── Helper: format YYYY-MM to MM-YYYY ───────────────────────────────
-            function formatYM(dateString) {
-                const parts = dateString.split('-');
-                return parts[1] + '-' + parts[0];
-            }
+      <script>
+      $(function() {
+        // ── Helper: YYYY-MM to MM-YYYY
+        function formatYM(d) {
+          var p = d.split('-');
+          return p[1] + '-' + p[0];
+        }
 
-            // ── Counters for dynamic lists ───────────────────────────────────────
-            var educationIndex = 0,
-                workIndex      = 0,
-                skillIndex     = 0,
-                langIndex      = @Model.Languages.Count;
+        // ── Counters
+        var educationIndex = 0,
+            workIndex      = 0,
+            skillIndex     = 0,
+            langIndex      = @Model.Languages.Count,
+            customCount    = 0;
 
-            // ── Personal Information ────────────────────────────────────────────
-            $('#Personal_PhoneNumber').on('input', function() {
-                const val   = this.value.replace(/\D/g, '').substring(0,9),
-                      parts = val.match(/.{1,3}/g) || [];
-                this.value = parts.join('-');
-            });
-            $('#Photo').on('change', function(evt) {
-                const file = evt.target.files[0];
-                if (!file || !file.type.startsWith('image/')) {
-                    alert('Please select an image file.');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = e => $('#photo-preview').attr('src', e.target.result).show();
-                reader.readAsDataURL(file);
-            });
-
-            // ── Autocomplete ────────────────────────────────────────────────────
-            $('#institution-autocomplete').autocomplete({
-                source: '@Url.Action("SearchInstitutions", "Cv")',
-                minLength: 2, delay: 200
-            });
-            $('#degree-autocomplete').autocomplete({
-                source: '@Url.Action("SearchDegrees", "Cv")',
-                minLength: 2, delay: 200
-            });
-            $('#EntryLanguage_Name').autocomplete({
-                source: '@Url.Action("SearchLanguages", "Cv")',
-                minLength: 1, delay: 200
-            });
-
-            // ── Date Restrictions ───────────────────────────────────────────────
-            const today = new Date().toISOString().split('T')[0];
-            $('input[type="date"][id$="StartDate"]')
-                .attr('max', today)
-                .on('change', function(){ if (this.value > today) this.value = today; });
-            $('input[type="date"]').on('change', function(){
-                const name = $(this).attr('name');
-                if (name.endsWith('.StartDate')) {
-                    const endName = name.replace('.StartDate','.EndDate'),
-                          $end    = $('input[name="'+endName+'"]');
-                    $end.attr('min', this.value);
-                    if ($end.val() && $end.val() < this.value) $end.val(this.value);
-                }
-                if (name.endsWith('.EndDate')) {
-                    const startName = name.replace('.EndDate','.StartDate'),
-                          startVal  = $('input[name="'+startName+'"]').val();
-                    if (startVal && this.value < startVal) this.value = startVal;
-                }
-            });
-
-            // ── EDUCATION ───────────────────────────────────────────────────────
-            $('#add-education').on('click', function() {
-                const inst  = $('[name="EntryEducation.Institution"]').val(),
-                      deg   = $('[name="EntryEducation.Degree"]').val(),
-                      start = $('[name="EntryEducation.StartDate"]').val(),
-                      end   = $('[name="EntryEducation.EndDate"]').val(),
-                      ong   = $('[name="EntryEducation.IsOngoing"]').is(':checked'),
-                      desc  = $('[name="EntryEducation.Description"]').val();
-
-                if (!inst || !deg) { alert('Please enter both Institution and Degree.'); return; }
-
-                let dates = start ? formatYM(start) : '';
-                if (ong)       dates += ' – Present';
-                else if (end)  dates += ' – ' + formatYM(end);
-
-                const tileHtml =
-                    `<div class="education-tile mb-2 p-2 border rounded" data-index="${educationIndex}">
-                        <strong>${inst}</strong> ${deg}<br>
-                        <small>${dates}</small>` +
-                        (desc
-                          ? `<br><small class="education-desc">${desc.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</small>`
-                          : ''
-                        ) +
-                    `</div>`;
-
-                $('#added-education-container').append(tileHtml);
-
-                const base = `Education[${educationIndex}]`;
-                $('<input>').attr({type:'hidden', name: base + '.Institution', value: inst}).appendTo('#education-inputs');
-                $('<input>').attr({type:'hidden', name: base + '.Degree',      value: deg }).appendTo('#education-inputs');
-                $('<input>').attr({type:'hidden', name: base + '.StartDate',   value: start}).appendTo('#education-inputs');
-                $('<input>').attr({type:'hidden', name: base + '.EndDate',     value: end }).appendTo('#education-inputs');
-                $('<input>').attr({type:'hidden', name: base + '.IsOngoing',   value: ong }).appendTo('#education-inputs');
-                $('<input>').attr({type:'hidden', name: base + '.Description', value: desc}).appendTo('#education-inputs');
-
-                educationIndex++;
-                $('[name="EntryEducation.Institution"], [name="EntryEducation.Degree"], [name="EntryEducation.StartDate"], [name="EntryEducation.EndDate"]').val('');
-                $('[name="EntryEducation.IsOngoing"]').prop('checked', false);
-                $('[name="EntryEducation.Description"]').val('');
-            });
-            $(document).on('click','.education-tile',function(){
-                const idx = $(this).data('index');
-                $(this).remove();
-                $('#education-inputs input').filter(function(){
-                    return this.name.indexOf(`Education[${idx}]`)===0;
-                }).remove();
-            });
-
-            // ── WORK EXPERIENCE ─────────────────────────────────────────────────
-            $('#add-work').on('click', function() {
-                const prefix    = 'EntryWork',
-                      comp      = $(`[name="${prefix}.Company"]`).val(),
-                      pos       = $(`[name="${prefix}.Position"]`).val(),
-                      startDate = $(`[name="${prefix}.StartDate"]`).val(),
-                      endDate   = $(`[name="${prefix}.EndDate"]`).val(),
-                      isOng     = $(`[name="${prefix}.IsOngoing"]`).is(':checked'),
-                      resp      = $(`[name="${prefix}.Responsibilities"]`).val();
-
-                if (!comp || !pos) { alert('Please enter both Company and Position.'); return; }
-
-                let dates = startDate||'';
-                if (isOng)       dates += ' – Present';
-                else if (endDate) dates += ' – ' + endDate;
-
-                const tileHtml =
-                    `<div class="work-tile mb-2" data-index="${workIndex}">
-                        <div class="work-content">
-                          <strong>${comp}</strong> – ${pos}<br>
-                          <small>${dates}</small>` +
-                          (resp
-                            ? `<br><small class="responsibilities">${resp.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</small>`
-                            : ''
-                          ) +
-                        `</div>
-                    </div>`;
-
-                $('#added-work-container').append(tileHtml);
-
-                const base = `Experience[${workIndex}]`;
-                $('<input>').attr({type:'hidden', name: base+'.Company',           value: comp}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.Position',          value: pos }).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.StartDate',         value: startDate}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.EndDate',           value: endDate}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.IsOngoing',         value: isOng}).appendTo('#work-inputs');
-                $('<input>').attr({type:'hidden', name: base+'.Responsibilities',  value: resp}).appendTo('#work-inputs');
-
-                workIndex++;
-                $(`[name="${prefix}.Company"], [name="${prefix}.Position"], [name="${prefix}.StartDate"], [name="${prefix}.EndDate"]`).val('');
-                $(`[name="${prefix}.IsOngoing"]`).prop('checked', false);
-                $(`[name="${prefix}.Responsibilities"]`).val('');
-            });
-            $(document).on('click','.work-tile',function(){
-                const idx = $(this).data('index');
-                $(this).remove();
-                $('#work-inputs input').filter(function(){
-                    return this.name.startsWith(`Experience[${idx}]`);
-                }).remove();
-            });
-
-            // ── SKILLS ───────────────────────────────────────────────────────────
-            $('#add-skill').on('click', function() {
-                const name = $('[name="EntrySkill.Name"]').val(),
-                      lvl  = $('[name="EntrySkill.Level"]').val(),
-                      desc = $('[name="EntrySkill.Description"]').val();
-                if (!name) { alert('Please enter skill name.'); return; }
-
-                const $tile = $(
-                    `<div class="badge badge-light text-dark m-1 p-2" data-index="${skillIndex}">
-                        ${name} <br>(Lvl ${lvl}/100)
-                        ${desc ? `<div><small>${desc}</small></div>` : ''}
-                    </div>`
-                );
-                $('#added-skills-container').append($tile);
-
-                $('<input>').attr({type:'hidden', name:`Skills[${skillIndex}].Name`,       value: name}).appendTo('#skills-inputs');
-                $('<input>').attr({type:'hidden', name:`Skills[${skillIndex}].Level`,      value: lvl }).appendTo('#skills-inputs');
-                $('<input>').attr({type:'hidden', name:`Skills[${skillIndex}].Description`,value: desc}).appendTo('#skills-inputs');
-
-                skillIndex++;
-                $('[name="EntrySkill.Name"]').val('');
-                $('[name="EntrySkill.Level"]').val('1');
-                $('[name="EntrySkill.Description"]').val('');
-            });
-            $(document).on('click','#added-skills-container .badge',function(){
-                const idx = $(this).data('index');
-                $(this).remove();
-                $('#skills-inputs input').filter(function(){
-                    return this.name.indexOf(`Skills[${idx}]`)==0;
-                }).remove();
-            });
-
-            // ── LANGUAGES ────────────────────────────────────────────────────────
-            $('#add-language').on('click', function() {
-                const prefix = 'EntryLanguage',
-                      name   = $(`[name="${prefix}.Name"]`).val(),
-                      lvl    = $(`[name="${prefix}.Level"]`).val();
-                if (!name) { alert('Please enter a language name.'); return; }
-
-                const $tile = $(
-                    `<div class="language-tile badge badge-light text-dark m-1 p-2" data-index="${langIndex}">
-                        ${name} <br>${lvl}
-                    </div>`
-                );
-                $('#added-languages-container').append($tile);
-
-                const base = `Languages[${langIndex}]`;
-                $('<input>').attr({type:'hidden', name:base+'.Name',  value: name}).appendTo('#languages-inputs');
-                $('<input>').attr({type:'hidden', name:base+'.Level', value: lvl }).appendTo('#languages-inputs');
-
-                langIndex++;
-                $(`[name="${prefix}.Name"]`).val('');
-                $(`[name="${prefix}.Level"]`).val('A1');
-            });
-            $(document).on('click','.language-tile, .remove-language',function(){
-                const $el = $(this).hasClass('language-tile') ? $(this) : $(this).closest('.language-item'),
-                      idx = $el.data('index');
-                $(`[data-index="${idx}"]`).remove();
-                $('#languages-inputs input').filter(function(){
-                    return this.name.indexOf(`Languages[${idx}]`)==0;
-                }).remove();
-            });
-
-            // ── CUSTOM SECTION ──────────────────────────────────────────────────
-            let fieldDefs   = [];  // CustomFieldDefinition[]
-            let fieldValues = {};  // { id: value }
-
-            function renderBuilderList(){
-                $('#custom-field-list').empty();
-                fieldDefs.forEach(f => {
-                    $('#custom-field-list').append(
-                        `<li class="list-group-item d-flex justify-content-between">
-                            <strong>${f.Label}</strong> (${f.Type}${f.MaxLength?`; max ${f.MaxLength}`:""})
-                            <button class="btn btn-sm btn-danger remove-field" data-id="${f.Id}">×</button>
-                        </li>`
-                    );
-                });
-                $('#Custom_FieldsJson').val(JSON.stringify(fieldDefs));
-            }
-
-            function renderFormFields(){
-                const $container = $('#custom-form-fields').empty();
-                fieldDefs.forEach(f => {
-                    const $row = $('<div class="form-group"></div>');
-                    $row.append(`<label for="${f.Id}">${f.Label}</label>`);
-                    let $inp;
-                    switch(f.Type){
-                      case 'TextArea':
-                        $inp = $(`<textarea id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"></textarea>`);
-                        break;
-                      case 'Number':
-                        $inp = $(`<input type="number" id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"/>`);
-                        break;
-                      case 'Date':
-                        $inp = $(`<input type="date"     id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"/>`);
-                        break;
-                      default:
-                        $inp = $(`<input type="text"     id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"/>`);
-                    }
-                    if (f.MaxLength) $inp.attr('maxlength', f.MaxLength);
-                    if (fieldValues[f.Id]) $inp.val(fieldValues[f.Id]);
-                    $row.append($inp);
-                    $container.append($row);
-                });
-                $('#Custom_ValuesJson').val(JSON.stringify(fieldValues));
-            }
-
-            $('#add-custom-field').on('click', function(){
-                const type     = $('#new-field-type').val(),
-                      label    = $('#new-field-label').val().trim(),
-                      maxLen   = $('#new-field-maxlength').val();
-                if (!label) { alert('You must enter a label'); return; }
-                const id = `field-${fieldDefs.length}-${Date.now()}`;
-                fieldDefs.push({ Id: id, Label: label, Type: type, MaxLength: maxLen?parseInt(maxLen):null });
-                renderBuilderList();
-                renderFormFields();
-                $('#new-field-label, #new-field-maxlength').val('');
-            });
-
-            $(document).on('click','.remove-field', function(){
-                const id = $(this).data('id');
-                fieldDefs = fieldDefs.filter(f=>f.Id!==id);
-                delete fieldValues[id];
-                renderBuilderList();
-                renderFormFields();
-            });
-
-            $('#custom-form-fields').on('input change','[name^="Custom.Values"]', function(){
-                fieldValues[this.id] = $(this).val();
-                $('#Custom_ValuesJson').val(JSON.stringify(fieldValues));
-            });
-
-            // ── SECTION TOGGLE (“Add Section”) ───────────────────────────────────
-            $('.dropdown-item[data-section]').on('click', function(e){
-                e.preventDefault();
-                const sec      = $(this).data('section'),
-                      $wrapper = $('#addSectionBtn').closest('.mb-4');
-                $('#section-' + sec)
-                  .removeClass('d-none')
-                  .insertBefore($wrapper);
-                $(this).addClass('disabled');
-            });
+        // ── Personal Info handlers
+        $('#Personal_PhoneNumber').on('input', function(){
+          var v=this.value.replace(/\D/g,'').substring(0,9), m=v.match(/.{1,3}/g)||[];
+          this.value = m.join('-');
         });
-        </script>
-}
+        $('#Photo').on('change', function(e){
+          var f=e.target.files[0];
+          if(!f||!f.type.startsWith('image/')){ alert('Please select an image file.'); return; }
+          var r=new FileReader();
+          r.onload = evt => $('#photo-preview').attr('src',evt.target.result).show();
+          r.readAsDataURL(f);
+        });
 
+        // ── Autocomplete
+        $('#institution-autocomplete').autocomplete({ source:'@Url.Action("SearchInstitutions", "Cv")', minLength:2 });
+        $('#degree-autocomplete').autocomplete({ source:'@Url.Action("SearchDegrees", "Cv")',       minLength:2 });
+        $('#EntryLanguage_Name').autocomplete({ source:'@Url.Action("SearchLanguages", "Cv")',     minLength:1 });
+
+        // ── Date restrictions
+        var today=new Date().toISOString().split('T')[0];
+        $('input[type="date"][id$="StartDate"]').attr('max',today).on('change',function(){
+          if(this.value>today) this.value=today;
+        });
+        $('input[type="date"]').on('change',function(){
+          var n=$(this).attr('name');
+          if(n.endsWith('.StartDate')){
+            var end=n.replace('.StartDate','.EndDate'),
+                $e=$('input[name="'+end+'"]');
+            $e.attr('min',this.value);
+            if($e.val()<this.value) $e.val(this.value);
+          }
+          if(n.endsWith('.EndDate')){
+            var st=n.replace('.EndDate','.StartDate'),
+                v=$('input[name="'+st+'"]').val();
+            if(this.value<v) this.value=v;
+          }
+        });
+
+        // ── Education
+        $('#add-education').on('click', function(){
+          var inst=$('[name="EntryEducation.Institution"]').val(),
+              deg =$('[name="EntryEducation.Degree"]').val(),
+              s   =$('[name="EntryEducation.StartDate"]').val(),
+              e   =$('[name="EntryEducation.EndDate"]').val(),
+              o   =$('[name="EntryEducation.IsOngoing"]').is(':checked'),
+              dsc =$('[name="EntryEducation.Description"]').val();
+          if(!inst||!deg){ alert('Please enter both Institution and Degree.'); return; }
+          var dates = s?formatYM(s):'';
+          if(o) dates+=' – Present'; else if(e) dates+=' – '+formatYM(e);
+          var html =
+            `<div class="education-tile mb-2 p-2 border rounded" data-index="${educationIndex}">
+               <strong>${inst}</strong> ${deg}<br><small>${dates}</small>`+
+            (dsc?`<br><small class="education-desc">${dsc.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</small>`:'')+
+            `</div>`;
+          $('#added-education-container').append(html);
+          var base=`Education[${educationIndex}]`;
+          $('<input>').attr({type:'hidden',name:base+'.Institution', value:inst}).appendTo('#education-inputs');
+          $('<input>').attr({type:'hidden',name:base+'.Degree',      value:deg }).appendTo('#education-inputs');
+          $('<input>').attr({type:'hidden',name:base+'.StartDate',   value:s   }).appendTo('#education-inputs');
+          $('<input>').attr({type:'hidden',name:base+'.EndDate',     value:e   }).appendTo('#education-inputs');
+          $('<input>').attr({type:'hidden',name:base+'.IsOngoing',   value:o   }).appendTo('#education-inputs');
+          $('<input>').attr({type:'hidden',name:base+'.Description', value:dsc }).appendTo('#education-inputs');
+          educationIndex++;
+          $('[name="EntryEducation.Institution"],[name="EntryEducation.Degree"],[name="EntryEducation.StartDate"],[name="EntryEducation.EndDate"]').val('');
+          $('[name="EntryEducation.IsOngoing"]').prop('checked',false);
+          $('[name="EntryEducation.Description"]').val('');
+        });
+        $(document).on('click','.education-tile',function(){
+          var i=$(this).data('index');
+          $(this).remove();
+          $('#education-inputs input').filter(function(){
+            return this.name.indexOf(`Education[${i}]`)==0;
+          }).remove();
+        });
+
+        // ── Work
+        $('#add-work').on('click',function(){
+          var pfx='EntryWork',
+              co =$(`[name="${pfx}.Company"]`).val(),
+              po =$(`[name="${pfx}.Position"]`).val(),
+              sd =$(`[name="${pfx}.StartDate"]`).val(),
+              ed =$(`[name="${pfx}.EndDate"]`).val(),
+              og =$(`[name="${pfx}.IsOngoing"]`).is(':checked'),
+              rs =$(`[name="${pfx}.Responsibilities"]`).val();
+          if(!co||!po){ alert('Please enter both Company and Position.'); return; }
+          var dates=sd||'';
+          if(og) dates+=' – Present'; else if(ed) dates+=' – '+ed;
+          var html=
+            `<div class="work-tile mb-2" data-index="${workIndex}">
+               <div class="work-content">
+                 <strong>${co}</strong> – ${po}<br><small>${dates}</small>`+
+            (rs?`<br><small class="responsibilities">${rs.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</small>`:'')+
+            `</div></div>`;
+          $('#added-work-container').append(html);
+          var b=`Experience[${workIndex}]`;
+          $('<input>').attr({type:'hidden',name:b+'.Company',         value:co }).appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden',name:b+'.Position',        value:po }).appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden',name:b+'.StartDate',       value:sd }).appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden',name:b+'.EndDate',         value:ed }).appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden',name:b+'.IsOngoing',       value:og }).appendTo('#work-inputs');
+          $('<input>').attr({type:'hidden',name:b+'.Responsibilities',value:rs }).appendTo('#work-inputs');
+          workIndex++;
+          $(`[name="${pfx}.Company"],[name="${pfx}.Position"],[name="${pfx}.StartDate"],[name="${pfx}.EndDate"]`).val('');
+          $(`[name="${pfx}.IsOngoing"]`).prop('checked',false);
+          $(`[name="${pfx}.Responsibilities"]`).val('');
+        });
+        $(document).on('click','.work-tile',function(){
+          var i=$(this).data('index');
+          $(this).remove();
+          $('#work-inputs input').filter(function(){
+            return this.name.startsWith(`Experience[${i}]`);
+          }).remove();
+        });
+
+        // ── Skills
+        $('#add-skill').on('click',function(){
+          var nm=$('[name="EntrySkill.Name"]').val(),
+              lv=$('[name="EntrySkill.Level"]').val(),
+              ds=$('[name="EntrySkill.Description"]').val();
+          if(!nm){ alert('Please enter skill name.'); return; }
+          var $t=$(`
+            <div class="badge badge-light text-dark m-1 p-2" data-index="${skillIndex}">
+              ${nm}<br>(Lvl ${lv}/100)
+              ${ds?`<div><small>${ds}</small></div>`:''}
+            </div>
+          `);
+          $('#added-skills-container').append($t);
+          $('<input>').attr({type:'hidden',name:`Skills[${skillIndex}].Name`,       value:nm }).appendTo('#skills-inputs');
+          $('<input>').attr({type:'hidden',name:`Skills[${skillIndex}].Level`,      value:lv }).appendTo('#skills-inputs');
+          $('<input>').attr({type:'hidden',name:`Skills[${skillIndex}].Description`,value:ds }).appendTo('#skills-inputs');
+          skillIndex++;
+          $('[name="EntrySkill.Name"],[name="EntrySkill.Level"],[name="EntrySkill.Description"]').val('');
+        });
+        $(document).on('click','#added-skills-container .badge',function(){
+          var i=$(this).data('index');
+          $(this).remove();
+          $('#skills-inputs input').filter(function(){
+            return this.name.indexOf(`Skills[${i}]`)==0;
+          }).remove();
+        });
+
+        // ── Languages
+        $('#add-language').on('click',function(){
+          var p='EntryLanguage',
+              nm=$(`[name="${p}.Name"]`).val(),
+              lv=$(`[name="${p}.Level"]`).val();
+          if(!nm){ alert('Please enter a language name.'); return; }
+          var $t=$(`
+            <div class="language-tile badge badge-light text-dark m-1 p-2" data-index="${langIndex}">
+              ${nm}<br>${lv}
+            </div>
+          `);
+          $('#added-languages-container').append($t);
+          var b=`Languages[${langIndex}]`;
+          $('<input>').attr({type:'hidden',name:b+'.Name',value:nm }).appendTo('#languages-inputs');
+          $('<input>').attr({type:'hidden',name:b+'.Level',value:lv }).appendTo('#languages-inputs');
+          langIndex++;
+          $(`[name="${p}.Name"],[name="${p}.Level"]`).val('');
+        });
+        $(document).on('click','.language-tile, .remove-language',function(){
+          var $e=$(this).hasClass('language-tile')?$(this):$(this).closest('.language-item'),
+              i=$e.data('index');
+          $(`[data-index="${i}"]`).remove();
+          $('#languages-inputs input').filter(function(){
+            return this.name.indexOf(`Languages[${i}]`)==0;
+          }).remove();
+        });
+
+        // ── Custom Section (multiple)
+        let fieldDefs=[],
+            fieldValues={};
+        function renderBuilderList(){
+          $('#custom-field-list').empty();
+          fieldDefs.forEach(f=>{
+            $('#custom-field-list').append(`
+              <li class="list-group-item d-flex justify-content-between">
+                <strong>${f.Label}</strong> (${f.Type}${f.MaxLength?`; max ${f.MaxLength}`:""})
+                <button class="btn btn-sm btn-danger remove-field" data-id="${f.Id}">×</button>
+              </li>
+            `);
+          });
+          $('#Custom_FieldsJson').val(JSON.stringify(fieldDefs));
+        }
+        function renderFormFields(){
+          const $c=$('#custom-form-fields').empty();
+          fieldDefs.forEach(f=>{
+            const $r=$('<div class="form-group"></div>');
+            $r.append(`<label for="${f.Id}">${f.Label}</label>`);
+            let $i;
+            switch(f.Type){
+              case 'TextArea':
+                $i=$(`<textarea id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"></textarea>`); break;
+              case 'Number':
+                $i=$(`<input type="number" id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"/>`); break;
+              case 'Date':
+                $i=$(`<input type="date" id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"/>`); break;
+              default:
+                $i=$(`<input type="text" id="${f.Id}" name="Custom.Values[${f.Id}]" class="form-control"/>`);
+            }
+            if(f.MaxLength) $i.attr('maxlength',f.MaxLength);
+            if(fieldValues[f.Id]) $i.val(fieldValues[f.Id]);
+            $r.append($i);
+            $c.append($r);
+          });
+          $('#Custom_ValuesJson').val(JSON.stringify(fieldValues));
+        }
+        $('#add-custom-field').on('click',function(){
+          const tp=$('#new-field-type').val(),
+                lb=$('#new-field-label').val().trim(),
+                ml=$('#new-field-maxlength').val();
+          if(!lb){ alert('You must enter a label'); return; }
+          const id=`field-${fieldDefs.length}-${Date.now()}`;
+          fieldDefs.push({Id:id,Label:lb,Type:tp,MaxLength:ml?parseInt(ml):null});
+          renderBuilderList(); renderFormFields();
+          $('#new-field-label,#new-field-maxlength').val('');
+        });
+        $(document).on('click','.remove-field',function(){
+          const id=$(this).data('id');
+          fieldDefs=fieldDefs.filter(f=>f.Id!==id);
+          delete fieldValues[id];
+          renderBuilderList(); renderFormFields();
+        });
+        $('#custom-form-fields').on('input change','[name^="Custom.Values"]',function(){
+          fieldValues[this.id]=$(this).val();
+          $('#Custom_ValuesJson').val(JSON.stringify(fieldValues));
+        });
+
+        // ── Show section on Add Section click
+        $('.dropdown-item[data-section]').on('click',function(e){
+          e.preventDefault();
+          var sec=$(this).data('section'),
+              $w=$('#addSectionBtn').closest('.mb-4');
+          $('#section-'+sec).removeClass('d-none').insertBefore($w);
+          $(this).addClass('disabled');
+        });
+      });
+      </script>
+}
